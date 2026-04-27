@@ -88,11 +88,15 @@ Merge means converting raw calibration cases into durable DNA rules. The AI prop
 8. Only after approval, edit `voices/<voice>/dna.md`.
 9. Run `wc -w voices/<voice>/dna.md`.
 10. If the DNA is over 500 words, compress before saving.
-11. Write the current ISO date to:
+11. Write two lines to `voices/<voice>/.last-merge`:
+    - Line 1: current ISO date (`date -u +%Y-%m-%d`)
+    - Line 2: current total entry count from `calibration.md`
 
-```text
-voices/<voice>/.last-merge
+```bash
+printf '%s\n%s\n' "$(date -u +%Y-%m-%d)" "$ENTRY_COUNT" > voices/<voice>/.last-merge
 ```
+
+12. Validation: pick 3 random calibration entries, generate a sentence using the new DNA for each AI-ish prompt, and compare the output to the Preferred line. Warn the user if any generated output does not resemble the Preferred version — that entry may need a stronger rule in the DNA.
 
 ## Canonical Entry Schema
 
@@ -118,3 +122,4 @@ Do not promote:
 - Topic-specific one-offs.
 - Rules that contradict the existing DNA without asking.
 - Long examples that belong in `calibration.md`.
+- Vague adjectives: never merge a pattern into a rule like "write naturally" or "be clear." If the merged rule cannot be tested against a sentence to produce a pass/fail, it is too abstract to promote.
