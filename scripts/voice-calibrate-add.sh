@@ -1,28 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-VOICES_DIR="$REPO_ROOT/voices"
+# shellcheck source=lib/voice-common.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/voice-common.sh"
 
-usage() {
-  echo "Usage: $0 [voice-name]"
-}
-
-default_voice() {
-  find "$VOICES_DIR" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | while IFS= read -r voice_dir; do
-    basename "$voice_dir"
-    break
-  done
-}
-
-VOICE="${1:-$(default_voice)}"
-if [ -z "${VOICE:-}" ]; then
-  usage >&2
-  echo "No voice found. Create voices/<name>/ first or pass a voice name." >&2
-  exit 1
-fi
-
+VOICE="$(resolve_voice "${1:-}")"
 VOICE_DIR="$VOICES_DIR/$VOICE"
 CALIBRATION_FILE="$VOICE_DIR/calibration.md"
 mkdir -p "$VOICE_DIR"
@@ -41,13 +23,9 @@ ENTRY_NUMBER=$((ENTRY_COUNT + 1))
 TITLE="$(printf '%s' "$PREFERRED" | tr '\n' ' ' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//; s/[#*_`\\[\\]]//g' | cut -c 1-60)"
 [ -n "$TITLE" ] || TITLE="Untitled"
 
-cat >> "$CALIBRATION_FILE" <<EOF
-
-## Entry $ENTRY_NUMBER: $TITLE
-AI-ish: $AI_ISH
-Preferred: $PREFERRED
-Why: $WHY
-Pattern: $PATTERN
-EOF
+# Use printf with explicit format to prevent shell expansion of user-supplied values
+printf '\n## Entry %s: %s\nAI-ish: %s\nPreferred: %s\nWhy: %s\nPattern: %s\n' \
+  "$ENTRY_NUMBER" "$TITLE" "$AI_ISH" "$PREFERRED" "$WHY" "$PATTERN" \
+  >> "$CALIBRATION_FILE"
 
 echo "Added Entry $ENTRY_NUMBER to $CALIBRATION_FILE"

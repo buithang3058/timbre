@@ -1,29 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-VOICES_DIR="$REPO_ROOT/voices"
+# shellcheck source=lib/voice-common.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/voice-common.sh"
+
 THRESHOLD="${VOICE_MERGE_THRESHOLD:-5}"
 
-usage() {
-  echo "Usage: $0 [voice-name]"
-}
-
-default_voice() {
-  find "$VOICES_DIR" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | while IFS= read -r voice_dir; do
-    basename "$voice_dir"
-    break
-  done
-}
-
-VOICE="${1:-$(default_voice)}"
-if [ -z "${VOICE:-}" ]; then
-  usage >&2
-  echo "No voice found. Create voices/<name>/ first or pass a voice name." >&2
-  exit 1
-fi
-
+VOICE="$(resolve_voice "${1:-}")"
 VOICE_DIR="$VOICES_DIR/$VOICE"
 CALIBRATION_FILE="$VOICE_DIR/calibration.md"
 LAST_MERGE_FILE="$VOICE_DIR/.last-merge"
@@ -31,17 +14,22 @@ DNA_FILE="$VOICE_DIR/dna.md"
 
 echo "Voice: $VOICE"
 
+ENTRY_COUNT=0
 if [ ! -f "$CALIBRATION_FILE" ]; then
   echo "Calibration entries: 0"
   echo "Calibration file: missing ($CALIBRATION_FILE)"
 else
   ENTRY_COUNT="$(grep -c '^## Entry' "$CALIBRATION_FILE" 2>/dev/null || true)"
-  echo "Calibration entries: $ENTRY_COUNT"
+  echo "Calibration entries: $ENTRY_COUNT (total)"
 fi
 
+# .last-merge format: line 1 = ISO date, line 2 = entry count at time of merge
+COUNT_AT_MERGE=0
 if [ -f "$LAST_MERGE_FILE" ]; then
-  LAST_MERGE="$(sed -n '1p' "$LAST_MERGE_FILE")"
-  echo "Last merge: $LAST_MERGE"
+  LAST_MERGE_DATE="$(sed -n '1p' "$LAST_MERGE_FILE")"
+  COUNT_AT_MERGE="$(sed -n '2p' "$LAST_MERGE_FILE" | tr -d '[:space:]')"
+  COUNT_AT_MERGE="${COUNT_AT_MERGE:-0}"
+  echo "Last merge: $LAST_MERGE_DATE (entries at merge: $COUNT_AT_MERGE)"
 else
   echo "Last merge: First run - no prior merge"
 fi
@@ -62,8 +50,8 @@ if [ -f "$CALIBRATION_FILE" ]; then
   grep '^Pattern:' "$CALIBRATION_FILE" | tail -5 | sed 's/^Pattern:[[:space:]]*/- /' || true
 fi
 
-ENTRY_COUNT="${ENTRY_COUNT:-0}"
-if [ "$ENTRY_COUNT" -ge "$THRESHOLD" ]; then
+ENTRIES_SINCE_MERGE=$(( ENTRY_COUNT - COUNT_AT_MERGE ))
+if [ "$ENTRIES_SINCE_MERGE" -ge "$THRESHOLD" ]; then
   echo
-  echo "Merge reminder: $ENTRY_COUNT entries found. Run voice calibrate merge for $VOICE."
+  echo "Merge reminder: $ENTRIES_SINCE_MERGE new entries since last merge. Run voice calibrate merge for $VOICE."
 fi
