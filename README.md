@@ -1,5 +1,9 @@
 # agentic-content
 
+> **ARCHIVED** — Voice calibration has been merged into [seo-agentic](../seo-agentic/).
+> Calibration data lives at `seo-agentic/resources/context/voices/bui-thang/calibration.md`.
+> Scripts live at `seo-agentic/scripts/voice/`. Git history preserved here.
+
 Voice engine for AI-assisted writing.
 
 The repo stores a compact Writing DNA for each voice plus raw calibration cases:
