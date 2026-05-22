@@ -1,0 +1,13 @@
+{
+  "name": "agentic-content",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "extract:pairs": "node scripts/extract-pairs.js",
+    "test": "node tests/extract.test.js && bash tests/voice-scripts.sh"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "dotenv": "^16.4.7"
+  }
+}

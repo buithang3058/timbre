@@ -1,2 +1,5 @@
 voices/*/.last-merge
 .DS_Store
+node_modules/
+outputs/
+.env
