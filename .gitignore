@@ -3,3 +3,4 @@ voices/*/.last-merge
 node_modules/
 outputs/
 .env
+.gstack/
