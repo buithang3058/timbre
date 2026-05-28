@@ -178,7 +178,7 @@ SERP FORMAT GAP:
 ## After Output
 
 Say:
-> "Research done. Use this as your Stage 2 results in /content-seo. Does anything here change or sharpen your Perception Dump? If not, reply 'proceed to Stage 3' and I'll generate the center of gravity options."
+> "Research done. Use this as your Stage 2 results in /content-seo. Does anything here change or sharpen your Perception Dump? If not, reply 'proceed to Stage 3'."
 
 **STOP. Wait for user response.**
 

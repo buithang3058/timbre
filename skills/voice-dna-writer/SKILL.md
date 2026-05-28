@@ -1,5 +1,5 @@
 ---
-name: dna-writer
+name: voice-dna-writer
 description: >
   Converts a voice interview transcript into a compact Writing DNA file.
   Enforces the 500-word DNA limit by checking and compressing the output.
