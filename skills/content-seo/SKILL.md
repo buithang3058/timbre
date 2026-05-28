@@ -34,7 +34,7 @@ Look up the DNA path from the mapping table above. Check if the file exists.
 DNA file not found: voices/[project]/dna.md
 
 This skill requires a voice DNA file to draft in your style. Run:
-  /dna-writer [project]
+  /voice-dna-writer [project]
 Then retry /content-seo [project].
 ```
 
@@ -46,20 +46,12 @@ Also read these files silently:
 
 **Voice calibration (all projects):**
 - `voices/bui-thang/calibration.md` — AI-ish vs. preferred sentence pairs; apply these patterns when drafting
-- `voices/bui-thang/bad-almost-good.md` — 12 patterns that sound good but are generic; use the Global Detection Rules when evaluating every sentence in Stage 4
+- `voices/bui-thang/structural-rules.md` — 5 structural rules + Mode A/B split; structural rules override sentence-level DNA when they conflict
 
 **Crypto jargon rules (diverfi and tokemist only):**
 - `voices/bui-thang/crypto.md` — jargon hard rules; keep all crypto/DeFi terms in English, add short Vietnamese explanation on first use
 
-**SEO and quality references:**
-- `references/eeat-framework.md` — E-E-A-T signals and YMYL requirements
-- `references/google-seo-reference.md` — Google quality signals and structured data
-- `references/quality-gates.md` — minimum word counts, title/meta requirements, internal linking
-- `skills/content-seo/references/instructions-detail.md` — CORE-EEAT 16 constraints and SEO self-check workflow; apply in Stage 4 quality check
-- `skills/content-seo/references/title-formulas.md` — title formula matrix and CTR modifiers; use to generate 2-3 title options in quality snapshot
-- `skills/content-seo/references/content-structure-templates.md` — format blueprints; confirm required sections match FORMAT before drafting
-
-Do not summarize or confirm any of these to the user. Hold as context for Stage 4. Proceed to Stage 1.
+Do not summarize or confirm any of these to the user. Proceed to Stage 1.
 
 ---
 
@@ -125,7 +117,7 @@ Does this accurately reflect what you wrote? Reply 'yes' to continue to Stage 2,
 or correct any field that was misread.
 ```
 
-**STOP. Wait for confirmation before running Stage 2.**
+**STOP. Wait for confirmation. When the user confirms with 'yes' — save the Perception Dump to `drafts/[project]/[slug]/dump.md` (create the folder if needed; derive slug from TOPIC using Vietnamese no-diacritics format). Then immediately invoke `/seo-research [project] [topic]`. Do not run AI-only analysis first.**
 
 ---
 
@@ -133,11 +125,11 @@ or correct any field that was misread.
 
 Goal: find real evidence for the human's perception dump. Pattern miner only — not author.
 
-**If `/research` was run in this conversation:** Its `[RESEARCH OUTPUT]` block is Stage 2. Skip the AI-only analysis below. Go directly to the gate prompt.
+**`/seo-research` runs automatically after Stage 1 confirmation.** After `/seo-research` returns its `[RESEARCH OUTPUT]` block — save the full output to `drafts/[project]/[slug]/sources.md` before presenting to the user. Then go directly to the gate prompt.
 
-**If `/research` was NOT run:** Run the AI-only analysis below. Recommend the user run `/research` after this session for the next article — it produces keyword intent data and primary source verification that AI inference cannot.
+**AI-only fallback — last resort only:** Run the AI-only analysis below ONLY if seo-research fails completely (no keyword data returned, no claims verified, no coverage map generated). Flag the entire output as unverified inference. Do not run AI-only as a default or as a supplement when seo-research returns partial data.
 
-### AI-Only Fallback (when /research not run)
+### AI-Only Fallback (when /seo-research not run)
 
 **Important:** Output must begin with:
 
@@ -232,6 +224,14 @@ Hold the approved center in conversation context. It is the constraint for Stage
 
 ## Stage 4 — Draft → Cut → Discovery Loop
 
+Read these files silently before drafting:
+- `references/eeat-framework.md` — E-E-A-T signals and YMYL requirements
+- `references/google-seo-reference.md` — Google quality signals and structured data
+- `references/quality-gates.md` — minimum word counts, title/meta requirements, internal linking
+- `skills/content-seo/references/instructions-detail.md` — CORE-EEAT 16 constraints and SEO self-check workflow
+- `skills/content-seo/references/title-formulas.md` — title formula matrix and CTR modifiers
+- `skills/content-seo/references/content-structure-templates.md` — format blueprints
+
 ### Draft
 
 **Word count target — set before writing the first sentence:**
@@ -281,11 +281,17 @@ Map each Tier 1 entity to a section before drafting. If an entity maps to a sect
 
 Do not skip sections 3, 4, or 5. These are the sections most missing when drafting from a 5-field Perception Dump, because the dump captures INSIGHTS about the topic, not the full topic scope a reader needs to understand it completely.
 
+**Mode A vs Mode B:**
+- Mode A (utility — no voice rules): Key Takeaways, FAQ, TOC, inline definitions. Optimize for clarity and direct answers. Structural rules do not apply.
+- Mode B (structural rules + DNA apply): hook, body paragraphs, mechanism sections, consequence paragraphs, conclusion. Apply all 5 structural rules. Do not lead with insight or resolve tension before reader has context.
+
 **Hook rule:** Hook must start from where the TARGET READER is right now — their current behavior, current assumption, current situation — not from the article's conclusion or the center. Read the hub audience profile in the DNA before writing the first sentence. A beginner reader on an exchange should not encounter a scenario that assumes they already have MetaMask.
 
 **Key Takeaways block:** Immediately after the hook, add a Key Takeaways block with 3-5 bullet points. Each bullet = one concrete, specific insight — not a teaser or article summary. The block gives readers who skim the core of what they need to know. Takeaways must serve the approved center, not describe the article structure.
 
-**Image suggestions:** After the draft, propose 3-5 image placements using this format: `[Section: name | Size: WxH | Subject: what to show | Alt: descriptive text]`. Place images where they reduce cognitive load or anchor an abstract concept. Do not embed HTML — comment block only.
+**Image suggestions:** After the draft, produce 3-5 image entries for `image-prompts.md`. Each entry must include an AI-ready paste-able prompt inside a fenced code block (triple backtick) — NOT a prose description of what to show. Prompt must include brand colors, cinematic lighting, 8k, Unreal Engine 5 render, and `--ar` aspect ratio. Format per entry: `## Image N — [Name]` header → location/size/format/filename/alt fields → `**Prompt:**` label → full prompt in fenced code block. Reference validated format: `drafts/tokemist/blockchain-la-gi/image-prompts.md`. Do not embed HTML.
+
+  **Language rule:** Prompt text (inside code block) = English — AI generators work best in English. Alt text = match article language (Vietnamese for Vietnamese articles, with full diacritics). In-image text specified in the prompt (labels, captions, chart axes, overlay text) = match article language with full diacritics — never use diacritic-stripped Vietnamese even when embedded inside an English prompt string.
 
   Standard sizes: Wide infographic/comparison = **1200×628px** (Open Graph compatible). Multi-row table = **800×600px**. Photo illustration = **1200×800px**. Format: WebP primary, JPEG fallback, max 200KB.
 
@@ -297,10 +303,10 @@ Do not skip sections 3, 4, or 5. These are the sections most missing when drafti
 
 Present the draft first. Then run this check and append results below the draft.
 
-**Voice check (from calibration.md + bad-almost-good.md):**
-- Apply the Global Detection Rules (10 questions) from bad-almost-good.md to the draft as a whole. Flag paragraphs that fail — do not self-correct.
-- If a flag is ambiguous ("this smells AI but unclear why"), consult the pattern bank in bad-almost-good.md to identify which pattern it matches. Name the pattern.
-- Check calibration pairs: flag instances of slogan closings, meta-narration, announce-importance setup sentences, theatrical bucket brigade at argument openings, symmetrical insight. Do not rewrite — list each flag with the offending sentence.
+**Voice check — Mode B sections only (from structural-rules.md + calibration.md):**
+- For each Mode B section (hook, body, consequence, conclusion): check against 5 structural rules. Flag any section where insight precedes mechanism, tension resolves before reader has context, or abstraction appears before grounded reality.
+- Check calibration pairs: flag slogan closings, meta-narration, announce-importance openers, theatrical bucket brigade, symmetrical insight. Do not rewrite — list each flag with the offending sentence.
+- Mode A sections (Key Takeaways, FAQ, TOC): check only for clarity and accuracy. No voice flags.
 
 **E-E-A-T (from eeat-framework.md):**
 - Crypto/finance content is YMYL — highest E-E-A-T standards apply
@@ -338,10 +344,10 @@ Present the draft first. Then run this check and append results below the draft.
   - (CORE-EEAT R02)
 
 **Semantic Coverage Audit (from SEMANTIC ENTITY MAP in Stage 2):**
-- If /research was run: list all Tier 1 entities and check each — present in draft (✓) or missing (✗)?
+- If /seo-research was run: list all Tier 1 entities and check each — present in draft (✓) or missing (✗)?
 - If any Tier 1 entity is missing: flag it and note which section it would fit in. Do not add it silently.
 - If Semantic Entity Map had MEDIUM or LOW confidence: note this in the quality snapshot.
-- If /research was NOT run (AI-only Stage 2): skip this audit — no Semantic Entity Map available.
+- If /seo-research was NOT run (AI-only Stage 2): skip this audit — no Semantic Entity Map available.
 
 **After presenting the draft, append this block:**
 
@@ -356,7 +362,7 @@ YMYL flags: [any claims that need verification before publishing]
 Semantic coverage:
 - Tier 1 entities present: [list] ✓
 - Tier 1 entities missing: [list] ← flag for redraft
-- Confidence: [HIGH | MEDIUM | LOW | N/A — /research not run]
+- Confidence: [HIGH | MEDIUM | LOW | N/A — /seo-research not run]
 
 Title options (from title-formulas.md):
 1. [formula type] — "[title]" ([N] chars)
@@ -377,10 +383,10 @@ SEO structure check:
   - Pillar → cluster pages: [N links proposed]
 - External citations: [N included]
 
-Image suggestions:
-- [Section: [section name] | Subject: [what to show] | Alt: [descriptive text]]
-- (3-5 suggestions; prioritize abstract concepts and comparisons that benefit from visual)
+Image suggestions: [3-5 entries — use AI-ready code block format defined in Draft section above]
 ```
+
+After presenting the Quality Check output — save the image prompt entries to `drafts/[project]/[slug]/image-prompts.md`. The folder already exists from the dump.md step above.
 
 ### Cut Sequence
 
