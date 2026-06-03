@@ -219,42 +219,42 @@ Present in this order, each with a clear platform header:
 
 After presenting the output and voice check, ask:
 
-> "Posts ready. Auto-post to Facebook, or copy-paste manually?"
-> A) Auto-post to Facebook now
-> B) Copy-paste — I'll post manually
+> "Posts ready. Where do you want to auto-post?"
+> A) Facebook + LinkedIn
+> B) Facebook only
+> C) LinkedIn only
+> D) Copy-paste — I'll post manually
 
-If B: present the posts cleanly and stop.
+If D: present the posts cleanly and stop.
 
-If A: run the posting sequence below. Read credentials from `/Users/buithang/timbre/.env`.
+For A, B, C: run the relevant posting sequences below. Read credentials from `/Users/buithang/timbre/.env`.
 
-First, check credentials are present:
+First, check which credentials are present:
 ```bash
 source /Users/buithang/timbre/.env
 missing=""
-[ -z "$FB_PAGE_ID" ] && missing="$missing FB_PAGE_ID"
-[ -z "$FB_PAGE_ACCESS_TOKEN" ] && missing="$missing FB_PAGE_ACCESS_TOKEN"
+[ "$1" != "linkedin-only" ] && [ -z "$FB_PAGE_ID" ] && missing="$missing FB_PAGE_ID"
+[ "$1" != "linkedin-only" ] && [ -z "$FB_PAGE_ACCESS_TOKEN" ] && missing="$missing FB_PAGE_ACCESS_TOKEN"
+[ "$1" != "facebook-only" ] && [ -z "$LINKEDIN_ACCESS_TOKEN" ] && missing="$missing LINKEDIN_ACCESS_TOKEN"
+[ "$1" != "facebook-only" ] && [ -z "$LINKEDIN_AUTHOR_URN" ] && missing="$missing LINKEDIN_AUTHOR_URN"
 [ -n "$missing" ] && echo "MISSING:$missing" || echo "CREDENTIALS_OK"
 ```
 
-If any are missing: stop and say which vars are missing. Point to `skills/content-recap/SETUP.md` for setup instructions.
+If any required vars are missing: stop and say which are missing. Point to `skills/content-recap/SETUP.md`.
 
 ---
 
 ### Post to Facebook
 
-The Facebook post text is the post body WITHOUT the article URL (Facebook generates a link preview from the `link` param automatically).
-
 Split the Facebook post: body text → `FB_TEXT`, article URL → `FB_LINK`.
 
-**Step 1 — Force Facebook to scrape the article (ensures image appears in preview):**
-
+**Step 1 — Force scrape (ensures image appears in preview):**
 ```bash
 source /Users/buithang/timbre/.env
 curl -s -X POST "https://graph.facebook.com/?id=${FB_LINK}&scrape=true&access_token=${FB_PAGE_ACCESS_TOKEN}" > /dev/null
 ```
 
 **Step 2 — Post:**
-
 ```bash
 source /Users/buithang/timbre/.env
 FB_RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/${FB_PAGE_ID}/feed" \
@@ -264,9 +264,58 @@ FB_RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/${FB_PAGE_ID}/fe
 echo "$FB_RESPONSE"
 ```
 
-Parse the response:
-- If response contains `"id"`: success. Say "Facebook posted ✓"
-- If response contains `"error"`: extract `error.message` and display it. Do not retry automatically.
+- Response contains `"id"` → success. Say "Facebook posted ✓"
+- Response contains `"error"` → extract `error.message`, display it, do not retry.
+
+---
+
+### Post to LinkedIn
+
+LinkedIn requires the post text and article URL combined into a JSON payload. The article URL becomes a content card (LinkedIn scrapes the OG image automatically).
+
+Use `LINKEDIN_AUTHOR_URN` from `.env` — either `urn:li:person:{id}` (personal profile) or `urn:li:organization:{id}` (company page).
+
+```bash
+source /Users/buithang/timbre/.env
+LI_PAYLOAD=$(python3 -c "
+import json, sys
+text = sys.argv[1]
+url  = sys.argv[2]
+urn  = sys.argv[3]
+print(json.dumps({
+  'author': urn,
+  'commentary': text,
+  'visibility': 'PUBLIC',
+  'distribution': {
+    'feedDistribution': 'MAIN_FEED',
+    'targetEntities': [],
+    'thirdPartyDistributionChannels': []
+  },
+  'content': {
+    'article': {
+      'source': url
+    }
+  },
+  'lifecycleState': 'PUBLISHED',
+  'isReshareDisabledByAuthor': False
+}))
+" "$LI_TEXT" "$LI_LINK" "$LINKEDIN_AUTHOR_URN")
+
+LI_RESPONSE=$(curl -s -X POST "https://api.linkedin.com/rest/posts" \
+  -H "Authorization: Bearer ${LINKEDIN_ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -H "LinkedIn-Version: 202411" \
+  -H "X-Restli-Protocol-Version: 2.0.0" \
+  -d "$LI_PAYLOAD")
+echo "$LI_RESPONSE"
+```
+
+Before running, set:
+- `LI_TEXT` = LinkedIn post body (without the article URL — it appears as the content card)
+- `LI_LINK` = article URL
+
+- Empty response or response contains `"id"` → success. Say "LinkedIn posted ✓"
+- Response contains `"errorDetails"` or `"message"` → display the error, do not retry.
 
 ---
 
@@ -274,7 +323,8 @@ Parse the response:
 
 ```
 --- POST SUMMARY ---
-Facebook: ✓ posted / ✗ failed — [error message]
+Facebook: ✓ posted / ✗ failed — [error message]  (if selected)
+LinkedIn: ✓ posted / ✗ failed — [error message]  (if selected)
 ```
 
 ---
@@ -282,6 +332,6 @@ Facebook: ✓ posted / ✗ failed — [error message]
 ## What This Skill Does NOT Do
 
 - Does not create content from scratch — use /content-seo for that
-- Does not post to Threads, X, or LinkedIn — Facebook only for now
+- Does not post to Threads or X — Facebook and LinkedIn only
 - Does not rewrite the article — it recaps and adapts
 - Does not skip the confirmation gate — human confirms the center before any post is written

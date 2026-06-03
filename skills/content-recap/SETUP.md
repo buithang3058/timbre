@@ -1,12 +1,12 @@
 # content-recap — Social Auto-Post Setup
 
-Add these 4 variables to `/Users/buithang/timbre/.env`:
+Add these variables to `/Users/buithang/timbre/.env`:
 
 ```
 FB_PAGE_ID=
 FB_PAGE_ACCESS_TOKEN=
-THREADS_USER_ID=
-THREADS_ACCESS_TOKEN=
+LINKEDIN_ACCESS_TOKEN=
+LINKEDIN_AUTHOR_URN=
 ```
 
 ---
@@ -53,53 +53,60 @@ Find your page in the response. Copy its `access_token`.
 
 ---
 
-## Threads Setup
+## LinkedIn Setup
 
-Threads API uses Meta's Graph API with a separate token.
+LinkedIn supports posting to your **personal profile** or a **company page** — same setup, different URN.
 
-### Step 1 — Enable Threads API access
+### Step 1 — Create a LinkedIn developer app
 
-1. Go to https://developers.facebook.com/apps/
-2. Open your app (same one from Facebook setup, or create a new one)
-3. Add the **Threads API** product
-4. Under Threads API → **Permissions**: request `threads_basic` and `threads_content_publish`
+1. Go to https://www.linkedin.com/developers/apps/new
+2. Fill in app name (e.g. "timbre-poster"), associate with a LinkedIn Page (required, can be a dummy page)
+3. Under **Products** → request **Share on LinkedIn** and **Sign In with LinkedIn using OpenID Connect**
+4. Wait for approval (usually instant for Share on LinkedIn)
 
-### Step 2 — Get your Threads User ID
+### Step 2 — Get an access token
 
-1. Use the Graph API Explorer: https://developers.facebook.com/tools/explorer/
-2. Select your app, generate a token with Threads permissions
-3. Make a GET request to: `https://graph.threads.net/v1.0/me?fields=id,username`
-4. Copy the `id` value
-5. Add to `.env`: `THREADS_USER_ID=your_threads_user_id`
+1. Go to your app → **Auth** tab
+2. Copy your **Client ID** and **Client Secret**
+3. Add `https://www.linkedin.com/developers/tools/oauth/redirect` as a redirect URL under **OAuth 2.0 settings**
+4. Go to the OAuth 2.0 token generator: https://www.linkedin.com/developers/tools/oauth
+5. Select your app, check `w_member_social` (personal) and/or `w_organization_social` (company page)
+6. Click **Request access token** → authorize
+7. Copy the token
+8. Add to `.env`: `LINKEDIN_ACCESS_TOKEN=your_token`
 
-### Step 3 — Get a Threads access token
+Token expiry: 60 days. Refresh by repeating step 4-8.
 
-1. In the Graph API Explorer, generate a token with `threads_basic` and `threads_content_publish` permissions
-2. Exchange for a long-lived token (60 days):
+### Step 3 — Get your Author URN
 
+**For personal profile:**
 ```bash
-curl "https://graph.threads.net/refresh_access_token?grant_type=th_refresh_token&access_token=SHORT_LIVED_TOKEN"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.linkedin.com/v2/userinfo" | python3 -c "import json,sys; d=json.load(sys.stdin); print('urn:li:person:' + d['sub'])"
 ```
 
-3. Add to `.env`: `THREADS_ACCESS_TOKEN=your_threads_token`
+**For company page:**
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.linkedin.com/v2/organizationAcls?q=roleAssignee" | python3 -c "import json,sys; d=json.load(sys.stdin); [print(e['organization']) for e in d.get('elements',[])]"
+```
+This returns your org URN (e.g. `urn:li:organization:12345678`).
+
+Add to `.env`: `LINKEDIN_AUTHOR_URN=urn:li:person:ABC123` (or `urn:li:organization:12345678` for a page)
 
 ---
 
 ## Verify setup
 
-Run this to confirm all 4 vars are loaded:
-
 ```bash
 source /Users/buithang/timbre/.env
 echo "FB_PAGE_ID: ${FB_PAGE_ID:0:6}..."
 echo "FB_PAGE_ACCESS_TOKEN: ${FB_PAGE_ACCESS_TOKEN:0:8}..."
-echo "THREADS_USER_ID: ${THREADS_USER_ID:0:6}..."
-echo "THREADS_ACCESS_TOKEN: ${THREADS_ACCESS_TOKEN:0:8}..."
+echo "LINKEDIN_ACCESS_TOKEN: ${LINKEDIN_ACCESS_TOKEN:0:8}..."
+echo "LINKEDIN_AUTHOR_URN: ${LINKEDIN_AUTHOR_URN}"
 ```
 
 ## Token expiry
 
 | Token | Expiry | Refresh |
 |-------|--------|---------|
-| FB Page access token | Never (if generated correctly) | Re-run Step 3 |
-| Threads access token | 60 days | Run the refresh curl command above |
+| FB Page access token | Never (if generated correctly) | Re-run Facebook Step 3 |
+| LinkedIn access token | 60 days | Re-run LinkedIn Step 4-8 |
