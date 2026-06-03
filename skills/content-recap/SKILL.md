@@ -284,27 +284,23 @@ url  = sys.argv[2]
 urn  = sys.argv[3]
 print(json.dumps({
   'author': urn,
-  'commentary': text,
-  'visibility': 'PUBLIC',
-  'distribution': {
-    'feedDistribution': 'MAIN_FEED',
-    'targetEntities': [],
-    'thirdPartyDistributionChannels': []
-  },
-  'content': {
-    'article': {
-      'source': url
+  'lifecycleState': 'PUBLISHED',
+  'specificContent': {
+    'com.linkedin.ugc.ShareContent': {
+      'shareCommentary': {'text': text},
+      'shareMediaCategory': 'ARTICLE',
+      'media': [{'status': 'READY', 'originalUrl': url}]
     }
   },
-  'lifecycleState': 'PUBLISHED',
-  'isReshareDisabledByAuthor': False
+  'visibility': {
+    'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+  }
 }))
 " "$LI_TEXT" "$LI_LINK" "$LINKEDIN_AUTHOR_URN")
 
-LI_RESPONSE=$(curl -s -X POST "https://api.linkedin.com/rest/posts" \
+LI_RESPONSE=$(curl -s -X POST "https://api.linkedin.com/v2/ugcPosts" \
   -H "Authorization: Bearer ${LINKEDIN_ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
-  -H "LinkedIn-Version: 202411" \
   -H "X-Restli-Protocol-Version: 2.0.0" \
   -d "$LI_PAYLOAD")
 echo "$LI_RESPONSE"
