@@ -219,8 +219,8 @@ Present in this order, each with a clear platform header:
 
 After presenting the output and voice check, ask:
 
-> "Posts ready. Auto-post to Facebook and Threads, or copy-paste manually?"
-> A) Auto-post now
+> "Posts ready. Auto-post to Facebook, or copy-paste manually?"
+> A) Auto-post to Facebook now
 > B) Copy-paste — I'll post manually
 
 If B: present the posts cleanly and stop.
@@ -233,8 +233,6 @@ source /Users/buithang/timbre/.env
 missing=""
 [ -z "$FB_PAGE_ID" ] && missing="$missing FB_PAGE_ID"
 [ -z "$FB_PAGE_ACCESS_TOKEN" ] && missing="$missing FB_PAGE_ACCESS_TOKEN"
-[ -z "$THREADS_USER_ID" ] && missing="$missing THREADS_USER_ID"
-[ -z "$THREADS_ACCESS_TOKEN" ] && missing="$missing THREADS_ACCESS_TOKEN"
 [ -n "$missing" ] && echo "MISSING:$missing" || echo "CREDENTIALS_OK"
 ```
 
@@ -263,48 +261,11 @@ Parse the response:
 
 ---
 
-### Post to Threads
-
-Threads requires two API calls: create container → publish.
-
-**Step 1 — Create container:**
-```bash
-source /Users/buithang/timbre/.env
-THREADS_CONTAINER=$(curl -s -X POST "https://graph.threads.net/v1.0/${THREADS_USER_ID}/threads" \
-  --data-urlencode "text=${THREADS_TEXT}" \
-  -d "media_type=TEXT" \
-  -d "access_token=${THREADS_ACCESS_TOKEN}")
-echo "$THREADS_CONTAINER"
-CONTAINER_ID=$(echo "$THREADS_CONTAINER" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('id',''))" 2>/dev/null)
-echo "CONTAINER_ID: $CONTAINER_ID"
-```
-
-If `CONTAINER_ID` is empty: display the full API response and stop.
-
-**Step 2 — Publish:**
-```bash
-source /Users/buithang/timbre/.env
-THREADS_PUBLISH=$(curl -s -X POST "https://graph.threads.net/v1.0/${THREADS_USER_ID}/threads_publish" \
-  -d "creation_id=${CONTAINER_ID}" \
-  -d "access_token=${THREADS_ACCESS_TOKEN}")
-echo "$THREADS_PUBLISH"
-```
-
-Parse the response:
-- If response contains `"id"`: success. Say "Threads posted ✓"
-- If response contains `"error"`: extract `error.message` and display it.
-
-**Note on multi-post Threads threads:** If the Threads output from Step 4 has multiple posts (3–5), post only the first post automatically. Present the remaining posts for manual copy-paste with a note: "Multi-post threads require chaining — post 1 published, paste the rest as replies."
-
----
-
 ### Post summary
 
-After both API calls:
 ```
 --- POST SUMMARY ---
 Facebook: ✓ posted / ✗ failed — [error message]
-Threads:  ✓ posted / ✗ failed — [error message]
 ```
 
 ---
@@ -312,6 +273,6 @@ Threads:  ✓ posted / ✗ failed — [error message]
 ## What This Skill Does NOT Do
 
 - Does not create content from scratch — use /content-seo for that
-- Does not post to X or LinkedIn (API setup required — coming in v2)
+- Does not post to Threads, X, or LinkedIn — Facebook only for now
 - Does not rewrite the article — it recaps and adapts
 - Does not skip the confirmation gate — human confirms the center before any post is written
