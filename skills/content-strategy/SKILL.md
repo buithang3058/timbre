@@ -7,7 +7,7 @@ metadata:
 
 # Content Strategy — Writing Queue Planner
 
-Generates a prioritized writing queue for agentic-content projects: scans published content, in-progress drafts, and ideas backlog; maps gaps per hub; outputs 3–5 next articles pre-formatted for `/content-seo` Stage 1.
+Generates a prioritized writing queue for Timbre projects: scans published content, in-progress drafts, and ideas backlog; maps gaps per hub; outputs 3–5 next articles pre-formatted for `/content-seo` Stage 1.
 
 **Related skills:**
 - `/content-seo [project]` — write a specific article (4-stage perception-first workflow)
@@ -21,7 +21,6 @@ Generates a prioritized writing queue for agentic-content projects: scans publis
 | Project | DNA | Content Root | Drafts |
 |---|---|---|---|
 | tokemist | `voices/tokemist/dna.md` | `/Users/buithang/tokemist/web/content/` | `drafts/tokemist/` |
-| diverfi | `voices/diverfi/dna.md` | `/Users/buithang/diverfi/content/` | `drafts/diverfi/` |
 | simplize | `voices/simplize/dna.md` | TBD | `drafts/simplize/` |
 | motquacam | `voices/motquacam/dna.md` | TBD | `drafts/motquacam/` |
 
@@ -31,7 +30,7 @@ Generates a prioritized writing queue for agentic-content projects: scans publis
 
 If the user invoked `/content-strategy [project]`, use that project. If no project argument, ask:
 
-> "Which project? tokemist / diverfi / simplize / motquacam"
+> "Which project? tokemist / simplize / motquacam"
 
 Look up paths from the mapping table. Check if DNA file exists.
 

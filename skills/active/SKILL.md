@@ -1,6 +1,6 @@
 ---
 name: active
-description: Switch the active project context. Use when changing focus between projects. Triggers: "active [project]", "/active tokemist", "/active diverfi", "chuyển sang [project]", "switch to [project]".
+description: Switch the active project context. Use when changing focus between projects. Triggers: "active [project]", "/active tokemist", "/active simplize", "chuyển sang [project]", "switch to [project]".
 metadata:
   version: 1.0
 ---
@@ -14,17 +14,16 @@ Switches the active project context by updating the memory file. All future requ
 | Project | Status |
 |---|---|
 | tokemist | Active |
-| diverfi | Active (on hold until 3 tokemist articles live) |
-| simplize | DNA not created yet |
+| simplize | Active — DNA created 2026-05-29 |
 | motquacam | DNA not created yet |
 
 ## Steps
 
-**1. Read argument.** If the user typed `/active [project]`, use that project name. If no argument, ask: "Which project? tokemist / diverfi / simplize / motquacam"
+**1. Read argument.** If the user typed `/active [project]`, use that project name. If no argument, ask: "Which project? tokemist / simplize / motquacam"
 
 **2. Validate.** Check the project is in the known projects table. If unknown, list the valid options and stop.
 
-**3. Update memory.** Overwrite `~/.claude/projects/-Users-buithang-agentic-content/memory/project_active_focus.md` with:
+**3. Update memory.** Overwrite `~/.claude/projects/-Users-buithang-timbre/memory/project_active_focus.md` with:
 
 ```
 ---
@@ -42,7 +41,7 @@ Current active project: **[project]**
 Last updated: [today's date]
 ```
 
-**4. Update MEMORY.md index.** Edit the first line of `~/.claude/projects/-Users-buithang-agentic-content/memory/MEMORY.md` to reflect the new active project:
+**4. Update MEMORY.md index.** Edit the first line of `~/.claude/projects/-Users-buithang-timbre/memory/MEMORY.md` to reflect the new active project:
 
 ```
 - [Active project focus](project_active_focus.md) — current focus: **[project]**; default mọi request về [project], không đề cập project khác trừ khi user hỏi
