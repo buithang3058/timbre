@@ -246,6 +246,15 @@ The Facebook post text is the post body WITHOUT the article URL (Facebook genera
 
 Split the Facebook post: body text → `FB_TEXT`, article URL → `FB_LINK`.
 
+**Step 1 — Force Facebook to scrape the article (ensures image appears in preview):**
+
+```bash
+source /Users/buithang/timbre/.env
+curl -s -X POST "https://graph.facebook.com/?id=${FB_LINK}&scrape=true&access_token=${FB_PAGE_ACCESS_TOKEN}" > /dev/null
+```
+
+**Step 2 — Post:**
+
 ```bash
 source /Users/buithang/timbre/.env
 FB_RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/${FB_PAGE_ID}/feed" \
