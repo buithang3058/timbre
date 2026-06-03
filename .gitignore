@@ -4,3 +4,15 @@ node_modules/
 outputs/
 .env
 .gstack/
+
+# Private — never publish
+voices/bui-thang/
+voices/tokemist/
+voices/simplize/
+drafts/
+PROJECT_CONTEXT.md
+IDEAS.md
+TODOS.md
+AGENTS.md
+seen-urls.txt
+resources/
