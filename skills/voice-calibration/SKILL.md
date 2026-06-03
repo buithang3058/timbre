@@ -1,7 +1,7 @@
 ---
 name: voice-calibration
 description: >
-  Calibration workflow for agentic-content. Adds AI-ish -> Preferred -> Why ->
+  Calibration workflow for Timbre. Adds AI-ish -> Preferred -> Why ->
   Pattern entries, reviews accumulated entries, and merges durable patterns into DNA.
 ---
 

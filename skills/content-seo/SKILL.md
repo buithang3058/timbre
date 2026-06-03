@@ -4,25 +4,26 @@ description: >
   4-stage perception-first SEO article workflow. Human captures insight before AI
   writes anything. Stages: Perception Dump → Research → Center of Gravity → Draft.
   Supports Pillar and Cluster content tiers for topic cluster architecture.
-  Invoke as /content-seo [project] where project is diverfi | tokemist | simplize | motquacam.
+  Invoke as /content-seo [project] where project is tokemist | simplize | motquacam.
 ---
 
 # Content SEO — 4-Stage Workflow
 
-## Project → DNA Path Mapping
+## Voice File Routing
 
-| Project   | DNA Path                    |
-|-----------|-----------------------------|
-| diverfi   | `voices/bui-thang/dna.md`  |
-| tokemist  | `voices/tokemist/dna.md`   |
-| simplize  | `voices/simplize/dna.md`   |
-| motquacam | `voices/motquacam/dna.md`  |
+Load only files with a path. Skip `—` entries silently.
+
+| Project   | DNA                          | Calibration                        | Structural Rules                        | Jargon                        | Brand                                                         |
+|-----------|------------------------------|------------------------------------|-----------------------------------------|-------------------------------|---------------------------------------------------------------|
+| tokemist  | `voices/tokemist/dna.md`    | `voices/bui-thang/calibration.md` | `voices/bui-thang/structural-rules.md` | `voices/bui-thang/crypto.md` | `/Users/buithang/tokemist/resouces/Context/brand.md`          |
+| simplize  | `voices/simplize/dna.md`    | `voices/simplize/calibration.md`  | —                                       | `voices/simplize/finance.md` | —                                                             |
+| motquacam | `voices/motquacam/dna.md`   | —                                  | —                                       | —                             | —                                                             |
 
 ## Step 0 — Project Selection + DNA Check
 
 If the user invoked `/content-seo [project]`, use that project. If no project argument, ask:
 
-> "Which project is this content for? diverfi / tokemist / simplize / motquacam"
+> "Which project is this content for? tokemist / simplize / motquacam"
 
 Wait for answer before proceeding.
 
@@ -42,14 +43,12 @@ Do NOT proceed to Stage 1. Do not offer to draft without DNA.
 
 If DNA file exists — read it silently. If the DNA has a Content Hubs section, extract the hub names and hold them in context for Stage 1. If the DNA has no hub structure, note that HUB field is optional for this project.
 
-Also read these files silently:
+Also read these files silently — look up the current project row in the Voice File Routing table above. Load each file that has a path (skip `—` entries):
 
-**Voice calibration (all projects):**
-- `voices/bui-thang/calibration.md` — AI-ish vs. preferred sentence pairs; apply these patterns when drafting
-- `voices/bui-thang/structural-rules.md` — 5 structural rules + Mode A/B split; structural rules override sentence-level DNA when they conflict
-
-**Crypto jargon rules (diverfi and tokemist only):**
-- `voices/bui-thang/crypto.md` — jargon hard rules; keep all crypto/DeFi terms in English, add short Vietnamese explanation on first use
+- **Calibration:** AI-ish vs. preferred sentence pairs; apply when drafting
+- **Structural Rules:** 5 structural rules + Mode A/B split; override sentence-level DNA when they conflict
+- **Jargon:** hard rules for term handling — keep allowed terms in English, explain on first use
+- **Brand:** defer to Stage 4 — load before writing image prompts, not now
 
 Do not summarize or confirm any of these to the user. Proceed to Stage 1.
 
@@ -297,7 +296,7 @@ Do not skip sections 3, 4, or 5. These are the sections most missing when drafti
 
   **Image file naming rule:** Tên file phải bằng tiếng Việt không dấu, khoảng trắng thay bằng dấu `-`. Thứ tự ưu tiên: (1) phù hợp với section đặt ảnh, (2) từ khoá SEO. Ví dụ: `proof-of-work-va-co-che-bao-ve-bitcoin.webp`. Thêm tên file vào mỗi image prompt theo format: `Filename: [ten-file].webp`.
 
-  **Brand alignment:** Before writing image prompts, check if a brand.md exists for the project. For tokemist: `/Users/buithang/tokemist/resouces/Context/brand.md`. Apply brand colors, typography, and visual style to all prompts — do not use generic white-background clean design unless brand specifies it.
+  **Brand alignment:** Before writing image prompts, check the Brand column in the Voice File Routing table for the current project. If a path is listed, load that file and apply brand colors, typography, and visual style to all prompts. If `—`, use neutral design unless the DNA specifies visual style.
 
 ### Quality Check (run after presenting draft)
 
