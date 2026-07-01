@@ -36,25 +36,16 @@ Examples:
 | `motquacam` or `drafts/motquacam/` in path | motquacam |
 | Cannot determine | Ask: "Which project is this content for? tokemist / simplize / motquacam" |
 
-Once project is known, load silently:
-- `voices/bui-thang/dna.md` — author layer (always)
-- `voices/bui-thang/calibration.md` — sentence-level correction pairs
-- `voices/bui-thang/bad-almost-good.md` — anti-slop patterns
-- `voices/[project]/dna.md` — project layer
-
-If `voices/[project]/dna.md` does not exist — hard stop:
-```
-DNA file not found: voices/[project]/dna.md
-Run /voice-dna-writer [project] first, then retry.
-```
-
-Do not summarize or confirm loading. Proceed to Step 1.
+Proceed to Step 1.
 
 ---
 
 ## Step 1 — Read Article
 
-**If URL:** Fetch with WebFetch. Extract: title, body text, H2 headings, any data/statistics mentioned.
+**If URL:** Fetch with WebFetch. Extract:
+- **Hook** — the opening sentence or paragraph of the article, verbatim
+- **Key takeaways** — bullet points, conclusion section, or the 3–5 most important statements actually written in the article. Pull verbatim or near-verbatim. Do not derive or invent.
+- **Article URL** — the canonical URL for linking
 
 **If file path:** Read the file. Extract the same fields.
 
@@ -65,65 +56,29 @@ Do not proceed with partial content.
 
 ---
 
-## Step 2 — Extract Center + Key Insights
+## Step 2 — Extract Hook + Takeaways
 
-From the article content, derive:
+From what was extracted in Step 1:
 
-**Center of gravity** — what the article is REALLY about, at the mechanism level. Not the topic — the thesis. One sentence.
+**Hook** — use the article's actual opening line or the sharpest sentence in the first paragraph. Do not rewrite it. If the opening is weak (meta-narration, definition), take the next strong sentence instead.
 
-Example:
-- Topic: "ví crypto là gì"
-- Bad center: "bài này giải thích ví crypto"
-- Good center: "quyền kiểm soát tài sản phụ thuộc vào ai giữ private key, không phải tên tài khoản"
-
-**Key insights** — 3–5 bullets. Each must be:
-- Specific (contains a number, mechanism, or concrete example from the article)
-- Non-obvious (not the definition of the topic)
-- Self-contained (makes sense without the full article)
-
-Bad: "Ví crypto có nhiều loại khác nhau"
-Good: "Binance giữ private key của bạn — nếu Binance bị hack, bạn mất tiền dù tài khoản vẫn còn"
+**Key takeaways** — 3–5 statements pulled directly from the article. Prioritize: specific numbers, concrete mechanisms, counterintuitive facts. Do not paraphrase beyond trimming for length. Do not invent takeaways not present in the article.
 
 ---
 
-## Step 3 — Confirmation Gate
+## Step 3 — Generate Platform Posts
 
-Present to the user:
-
-```
-Center: [one-sentence center of gravity]
-
-Key insights:
-1. [insight]
-2. [insight]
-3. [insight]
-(4. [insight] — if applicable)
-(5. [insight] — if applicable)
-
-Does this capture what the article is really about?
-Reply 'yes' to generate posts, or correct anything.
-```
-
-**STOP. Wait for confirmation.**
-
-If the user corrects — update center and/or insights accordingly. Do not regenerate until user confirms.
-
----
-
-## Step 4 — Generate Platform Posts
-
-Generate all 4 platforms after confirmation. Apply voice DNA throughout.
+Use the hook and takeaways from Step 2 as the raw material. Reformat for each platform — do not rewrite the substance.
 
 ---
 
 ### X Thread
 
 **Rules:**
-- 5–8 tweets. Each tweet max 260 characters (leave room for numbering if added).
-- Tweet 1 (hook): bold claim, striking number, or the counterintuitive insight. No "THREAD:" opener. No "🧵" unless the article itself used emoji.
-- Tweets 2–7: one insight per tweet. Each self-contained — a reader who only sees tweet 3 should understand it without context.
-- Last tweet: one concrete implication or next action. No "follow me for more," no slogan closer.
-- Apply DNA: short sentences, lead with data/mechanism, no announce-importance, no symmetrical insight.
+- Tweet 1: article hook verbatim or trimmed to fit 260 chars. No "THREAD:" opener.
+- Tweets 2–N: one takeaway per tweet, pulled from the article. Each max 260 chars.
+- Last tweet: article URL on its own line. No slogan closer, no "follow me."
+- Only rewrite if the original text exceeds 260 chars — trim, don't rephrase.
 
 **Format output as:**
 ```
@@ -138,57 +93,28 @@ Generate all 4 platforms after confirmation. Apply voice DNA throughout.
 ### LinkedIn Post
 
 **Rules:**
-- 150–300 words.
-- Line 1 (hook): must stand alone before "see more" — 1 sentence, creates curiosity or states the sharpest observation from the article. Blank line after.
-- Body: 2–4 short paragraphs. Blank line between each. Mechanism → evidence → implication.
-- Ending: a real question that invites reflection or comment. Not "check out my article" or "click the link."
-- Article URL: include at the end as a plain URL on its own line, no "Link:" label.
-- Hashtags: max 3, at the very end. Only include if the project DNA uses them.
-- Apply DNA: no meta-narration, no motivational filler, no slogan closer.
+- Line 1: article hook. Blank line after.
+- Body: takeaways as short paragraphs, blank line between each.
+- End with article URL on its own line.
+- Only trim for length. Do not add new sentences or reframe the content.
 
 ---
 
 ### Facebook Post
 
 **Rules:**
-- 80–150 words.
-- Opens with the observation or mechanism — not "Tôi vừa viết bài về..." or "Bài mới rồi nhé."
-- Body: 2–3 short paragraphs.
-- Ends with a question that invites comments (not a CTA to read the article).
-- Article URL: on its own line after the text.
-- Apply DNA: conversational but specific, not generic. Lead with what's interesting, not what the article is called.
+- Open with the article hook. Body: 2–3 takeaways as short paragraphs.
+- Article URL on its own line after the text.
+- Only trim for length. Do not add new sentences.
 
 ---
 
 ### Threads Post
 
 **Rules:**
-- If article is short (< 800 words): single post, max 500 characters.
-- If article is medium/long (≥ 800 words): 3–5 posts, each max 480 characters.
-- More casual than X. Conversational opener.
-- Same anti-patterns apply: no meta-narration, no slogan closer.
-- Multi-post: each post self-contained, last post ends with the implication.
-
----
-
-## Step 5 — Voice Quality Check
-
-After generating all 4 posts, run a quick check. Flag any of the following — do NOT self-correct, list the flags for the user:
-
-| Anti-pattern | Signal |
-|---|---|
-| Meta-narration | "Bài này sẽ...", "In this thread I explain...", "Check out my new article" |
-| Announce importance | "Đây là điều quan trọng nhất...", "This is crucial..." |
-| Slogan closer | Two-part symmetrical closing sentence |
-| Motivational filler | "Bạn hoàn toàn có thể...", "Don't miss this", "Start today" |
-| Generic opener | Opens with topic definition instead of mechanism or observation |
-
-Append after the 4 posts:
-
-```
---- VOICE CHECK ---
-[list any flags, or "No flags — all 4 posts pass voice check."]
-```
+- If article is short (< 800 words): single post, max 500 chars — hook + 1–2 takeaways + URL.
+- If article is medium/long (≥ 800 words): 3–5 posts, each max 480 chars. Post 1 = hook, posts 2–N = one takeaway each, last post ends with URL.
+- Only trim for character limits. Do not rewrite.
 
 ---
 
@@ -208,39 +134,39 @@ Present in this order, each with a clear platform header:
 
 ## Threads
 [post]
-
---- VOICE CHECK ---
-[flags or pass]
 ```
 
 ---
 
-## Step 6 — Auto-Post (optional)
+## Step 6 — Auto-Post
 
-After presenting the output and voice check, ask:
+After presenting the output and voice check, automatically post to all platforms with available credentials. No questions asked. Read credentials from `/Users/buithang/timbre/.env`.
 
-> "Posts ready. Where do you want to auto-post?"
-> A) Facebook + LinkedIn
-> B) Facebook only
-> C) LinkedIn only
-> D) Copy-paste — I'll post manually
-
-If D: present the posts cleanly and stop.
-
-For A, B, C: run the relevant posting sequences below. Read credentials from `/Users/buithang/timbre/.env`.
-
-First, check which credentials are present:
+Check which credentials are present:
 ```bash
 source /Users/buithang/timbre/.env
-missing=""
-[ "$1" != "linkedin-only" ] && [ -z "$FB_PAGE_ID" ] && missing="$missing FB_PAGE_ID"
-[ "$1" != "linkedin-only" ] && [ -z "$FB_PAGE_ACCESS_TOKEN" ] && missing="$missing FB_PAGE_ACCESS_TOKEN"
-[ "$1" != "facebook-only" ] && [ -z "$LINKEDIN_ACCESS_TOKEN" ] && missing="$missing LINKEDIN_ACCESS_TOKEN"
-[ "$1" != "facebook-only" ] && [ -z "$LINKEDIN_AUTHOR_URN" ] && missing="$missing LINKEDIN_AUTHOR_URN"
-[ -n "$missing" ] && echo "MISSING:$missing" || echo "CREDENTIALS_OK"
+echo "FB_PAGE_ID=${FB_PAGE_ID:+SET}"
+echo "FB_PAGE_ACCESS_TOKEN=${FB_PAGE_ACCESS_TOKEN:+SET}"
+echo "LINKEDIN_ACCESS_TOKEN=${LINKEDIN_ACCESS_TOKEN:+SET}"
+echo "LINKEDIN_AUTHOR_URN=${LINKEDIN_AUTHOR_URN:+SET}"
+echo "THREADS_ACCESS_TOKEN=${THREADS_ACCESS_TOKEN:+SET}"
+echo "X_API_KEY=${X_API_KEY:+SET}"
+echo "X_API_SECRET=${X_API_SECRET:+SET}"
+echo "X_ACCESS_TOKEN=${X_ACCESS_TOKEN:+SET}"
+echo "X_ACCESS_TOKEN_SECRET=${X_ACCESS_TOKEN_SECRET:+SET}"
 ```
 
-If any required vars are missing: stop and say which are missing. Point to `skills/content-recap/SETUP.md`.
+Before posting to Threads, auto-refresh the token if it's within 7 days of expiry:
+```bash
+/Users/buithang/timbre/scripts/threads-token.sh refresh
+```
+If refresh fails with "expired" or "invalid token": print instructions below and skip Threads. Do not stop other platforms.
+
+Post to every platform whose credentials are SET. Skip silently if missing — do not stop or ask. Skip X entirely — X API requires a paid plan.
+
+If Threads token is expired and refresh failed:
+> "Threads token expired. Run: cd /Users/buithang/timbre && ./scripts/threads-token.sh exchange <new_short_lived_token>
+> Get a new short-lived token at: Meta app dashboard → Threads API → Getting Started"
 
 ---
 
@@ -315,12 +241,93 @@ Before running, set:
 
 ---
 
+### Post to Threads
+
+For single Threads post: create container → publish.
+For multi-post thread (3–5 posts): create and publish post 1, then create and publish each subsequent post as a reply with `reply_to_id` pointing to post 1's ID.
+
+**Step 1 — Get user ID:**
+```bash
+source /Users/buithang/timbre/.env
+curl -s "https://graph.threads.net/v1.0/me?fields=id&access_token=${THREADS_ACCESS_TOKEN}"
+```
+
+**Step 2 — Create container for each post:**
+```bash
+source /Users/buithang/timbre/.env
+# First post (no reply_to_id)
+CONTAINER=$(curl -s -X POST "https://graph.threads.net/v1.0/${THREADS_USER_ID}/threads" \
+  --data-urlencode "text=${POST_TEXT}" \
+  -d "media_type=TEXT" \
+  -d "access_token=${THREADS_ACCESS_TOKEN}")
+CONTAINER_ID=$(echo "$CONTAINER" | python3 -c "import json,sys; print(json.load(sys.stdin)['id'])")
+
+# Reply posts (add reply_to_id=${FIRST_POST_ID} after publishing post 1)
+```
+
+**Step 3 — Publish (wait 3s after container creation before publishing):**
+```bash
+source /Users/buithang/timbre/.env
+sleep 3
+PUBLISH=$(curl -s -X POST "https://graph.threads.net/v1.0/${THREADS_USER_ID}/threads_publish" \
+  -d "creation_id=${CONTAINER_ID}" \
+  -d "access_token=${THREADS_ACCESS_TOKEN}")
+echo "$PUBLISH"
+```
+
+- Response contains `"id"` → success. Say "Threads posted ✓"
+- Response contains `"error"` → extract `error.message`, display it. If error_subcode is 190 (expired token): say "Threads token expired — refresh at Meta developer dashboard and update THREADS_ACCESS_TOKEN in /Users/buithang/timbre/.env"
+
+---
+
+### Post to X
+
+Post the X thread as a reply chain. Tweet 1 is the root; each subsequent tweet replies to the previous one.
+
+```bash
+source /Users/buithang/timbre/.env
+python3 << 'PYEOF'
+import os, sys, tweepy
+
+client = tweepy.Client(
+    consumer_key=os.environ["X_API_KEY"],
+    consumer_secret=os.environ["X_API_SECRET"],
+    access_token=os.environ["X_ACCESS_TOKEN"],
+    access_token_secret=os.environ["X_ACCESS_TOKEN_SECRET"]
+)
+
+tweets = [
+    "TWEET_1_TEXT",
+    "TWEET_2_TEXT",
+    # ... one string per tweet
+]
+
+prev_id = None
+for i, text in enumerate(tweets):
+    kwargs = {"text": text}
+    if prev_id:
+        kwargs["reply"] = {"in_reply_to_tweet_id": prev_id}
+    resp = client.create_tweet(**kwargs)
+    prev_id = resp.data["id"]
+    print(f"Tweet {i+1}: {prev_id}")
+
+print("X thread posted")
+PYEOF
+```
+
+- All tweets succeed → say "X posted ✓"
+- Any tweet fails → display error, note which tweet number failed, do not retry.
+
+---
+
 ### Post summary
 
 ```
 --- POST SUMMARY ---
-Facebook: ✓ posted / ✗ failed — [error message]  (if selected)
-LinkedIn: ✓ posted / ✗ failed — [error message]  (if selected)
+Facebook: ✓ posted / ✗ failed — [error message]
+LinkedIn: ✓ posted / ✗ failed — [error message]
+Threads:  ✓ posted / ✗ failed — [error message] / — skipped (no token)
+X:        ✓ posted / ✗ failed — [error message] / — skipped (no credentials)
 ```
 
 ---
@@ -328,6 +335,5 @@ LinkedIn: ✓ posted / ✗ failed — [error message]  (if selected)
 ## What This Skill Does NOT Do
 
 - Does not create content from scratch — use /content-seo for that
-- Does not post to Threads or X — Facebook and LinkedIn only
+- Does not post to X natively — uses tweepy (pip3 install tweepy)
 - Does not rewrite the article — it recaps and adapts
-- Does not skip the confirmation gate — human confirms the center before any post is written
