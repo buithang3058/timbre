@@ -109,9 +109,7 @@ Reporting "no schema found" based solely on `web_fetch` or `curl` leads to false
 ### Site Speed & Core Web Vitals
 
 **Core Web Vitals**
-- LCP (Largest Contentful Paint): < 2.5s
-- INP (Interaction to Next Paint): < 200ms
-- CLS (Cumulative Layout Shift): < 0.1
+→ Thresholds, LCP subparts, bottlenecks, measurement tools: see [cwv-thresholds.md](~/.claude/skills/seo/resources/references/cwv-thresholds.md)
 
 **Speed Factors**
 - Server response time (TTFB)
@@ -121,12 +119,6 @@ Reporting "no schema found" based solely on `web_fetch` or `curl` leads to false
 - Caching headers
 - CDN usage
 - Font loading
-
-**Tools**
-- PageSpeed Insights
-- WebPageTest
-- Chrome DevTools
-- Search Console Core Web Vitals report
 
 ### Mobile-Friendliness
 
@@ -236,7 +228,6 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 **Check for:**
 - Unique titles for each page
 - Primary keyword near beginning
-- 50-60 characters (visible in SERP)
 - Compelling and click-worthy
 - Brand name placement (end, usually)
 
@@ -247,11 +238,12 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 - Keyword stuffing
 - Missing entirely
 
+→ Length requirements and examples: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
+
 ### Meta Descriptions
 
 **Check for:**
 - Unique descriptions per page
-- 150-160 characters
 - Includes primary keyword
 - Clear value proposition
 - Call to action
@@ -261,6 +253,8 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 - Auto-generated garbage
 - Too long/short
 - No compelling reason to click
+
+→ Length requirements and examples: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
 
 ### Heading Structure
 
@@ -296,12 +290,12 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 
 **Check for:**
 - Descriptive file names
-- Alt text on all images
-- Alt text describes image
 - Compressed file sizes
 - Modern formats (WebP)
 - Lazy loading implemented
 - Responsive images
+
+→ Alt text requirements, length, and examples: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
 
 ### Internal Linking
 
@@ -310,13 +304,14 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 - Descriptive anchor text
 - Logical link relationships
 - No broken internal links
-- Reasonable link count per page
 
 **Common issues:**
 - Orphan pages (no internal links)
 - Over-optimized anchor text
 - Important pages buried
 - Excessive footer/sidebar links
+
+→ Link count targets per page type and anchor text rules: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
 
 ### Keyword Targeting
 
@@ -338,27 +333,7 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 
 ### E-E-A-T Signals
 
-**Experience**
-- First-hand experience demonstrated
-- Original insights/data
-- Real examples and case studies
-
-**Expertise**
-- Author credentials visible
-- Accurate, detailed information
-- Properly sourced claims
-
-**Authoritativeness**
-- Recognized in the space
-- Cited by others
-- Industry credentials
-
-**Trustworthiness**
-- Accurate information
-- Transparent about business
-- Contact information available
-- Privacy policy, terms
-- Secure site (HTTPS)
+→ Full framework with weights (Experience 20%, Expertise 25%, Authority 25%, Trust 30%), scoring rubric (0–100), December 2025 core update impact, and improvement recommendations by score: see [eeat-framework.md](~/.claude/skills/seo/resources/references/eeat-framework.md)
 
 ### Content Depth
 
@@ -453,6 +428,9 @@ Same format as above
 
 - [AI Writing Detection](references/ai-writing-detection.md): Common AI writing patterns to avoid (em dashes, overused phrases, filler words)
 - [International SEO](references/international-seo.md): Evidence and sources for hreflang, canonical + i18n, sitemaps, URL structure, and content quality across locales
+- [CWV Thresholds](~/.claude/skills/seo/resources/references/cwv-thresholds.md): LCP/INP/CLS thresholds, LCP subparts, bottlenecks, measurement tools (updated Feb 2026)
+- [E-E-A-T Framework](~/.claude/skills/seo/resources/references/eeat-framework.md): Full scoring rubric with weights, Dec 2025 core update impact, recommendations by score
+- [Quality Gates](~/.claude/skills/seo/resources/references/quality-gates.md): Word counts by page type, title/meta lengths, alt text rules, internal link counts, content freshness
 - For AI search optimization (AEO, GEO, LLMO, AI Overviews), see the **ai-seo** skill
 
 ---
