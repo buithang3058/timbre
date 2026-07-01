@@ -109,7 +109,14 @@ Reporting "no schema found" based solely on `web_fetch` or `curl` leads to false
 ### Site Speed & Core Web Vitals
 
 **Core Web Vitals**
-→ Thresholds, LCP subparts, bottlenecks, measurement tools: see [cwv-thresholds.md](~/.claude/skills/seo/resources/references/cwv-thresholds.md)
+- LCP (Largest Contentful Paint): < 2.5s good, > 4s poor
+- INP (Interaction to Next Paint): < 200ms good, > 500ms poor
+- CLS (Cumulative Layout Shift): < 0.1 good, > 0.25 poor
+
+For LCP subparts, bottlenecks, and measurement tools — read before auditing:
+```
+Read: ~/.claude/skills/seo/resources/references/cwv-thresholds.md
+```
 
 **Speed Factors**
 - Server response time (TTFB)

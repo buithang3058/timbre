@@ -36,6 +36,18 @@ Examples:
 | `motquacam` or `drafts/motquacam/` in path | motquacam |
 | Cannot determine | Ask: "Which project is this content for? tokemist / simplize / motquacam" |
 
+Once project is known, load silently:
+- `voices/bui-thang/dna.md` — author layer (always)
+- `voices/bui-thang/calibration.md` — sentence-level correction pairs
+- `voices/bui-thang/bad-almost-good.md` — anti-slop patterns
+- `voices/[project]/dna.md` — project layer
+
+If `voices/[project]/dna.md` does not exist — hard stop:
+```
+DNA file not found: voices/[project]/dna.md
+Run /voice-dna-writer [project] first, then retry.
+```
+
 Proceed to Step 1.
 
 ---
@@ -140,7 +152,18 @@ Present in this order, each with a clear platform header:
 
 ## Step 6 — Auto-Post
 
-After presenting the output and voice check, automatically post to all platforms with available credentials. No questions asked. Read credentials from `/Users/buithang/timbre/.env`.
+After presenting the output, ask:
+
+> "Posts ready. Where do you want to post?"
+> A) Facebook + LinkedIn + Threads
+> B) Facebook only
+> C) LinkedIn only
+> D) Threads only
+> E) Copy-paste — I'll post manually
+
+If E: stop here.
+
+For A–D: check credentials and run the relevant posting sequences below. Read credentials from `/Users/buithang/timbre/.env`.
 
 Check which credentials are present:
 ```bash
@@ -162,7 +185,7 @@ Before posting to Threads, auto-refresh the token if it's within 7 days of expir
 ```
 If refresh fails with "expired" or "invalid token": print instructions below and skip Threads. Do not stop other platforms.
 
-Post to every platform whose credentials are SET. Skip silently if missing — do not stop or ask. Skip X entirely — X API requires a paid plan.
+Post to the platforms selected by the user. Skip silently if credentials are missing for a selected platform — list it as skipped in the summary. X is not supported (requires paid API plan).
 
 If Threads token is expired and refresh failed:
 > "Threads token expired. Run: cd /Users/buithang/timbre && ./scripts/threads-token.sh exchange <new_short_lived_token>
@@ -280,54 +303,13 @@ echo "$PUBLISH"
 
 ---
 
-### Post to X
-
-Post the X thread as a reply chain. Tweet 1 is the root; each subsequent tweet replies to the previous one.
-
-```bash
-source /Users/buithang/timbre/.env
-python3 << 'PYEOF'
-import os, sys, tweepy
-
-client = tweepy.Client(
-    consumer_key=os.environ["X_API_KEY"],
-    consumer_secret=os.environ["X_API_SECRET"],
-    access_token=os.environ["X_ACCESS_TOKEN"],
-    access_token_secret=os.environ["X_ACCESS_TOKEN_SECRET"]
-)
-
-tweets = [
-    "TWEET_1_TEXT",
-    "TWEET_2_TEXT",
-    # ... one string per tweet
-]
-
-prev_id = None
-for i, text in enumerate(tweets):
-    kwargs = {"text": text}
-    if prev_id:
-        kwargs["reply"] = {"in_reply_to_tweet_id": prev_id}
-    resp = client.create_tweet(**kwargs)
-    prev_id = resp.data["id"]
-    print(f"Tweet {i+1}: {prev_id}")
-
-print("X thread posted")
-PYEOF
-```
-
-- All tweets succeed → say "X posted ✓"
-- Any tweet fails → display error, note which tweet number failed, do not retry.
-
----
-
 ### Post summary
 
 ```
 --- POST SUMMARY ---
-Facebook: ✓ posted / ✗ failed — [error message]
-LinkedIn: ✓ posted / ✗ failed — [error message]
-Threads:  ✓ posted / ✗ failed — [error message] / — skipped (no token)
-X:        ✓ posted / ✗ failed — [error message] / — skipped (no credentials)
+Facebook: ✓ posted / ✗ failed — [error message] / — skipped (not selected / no credentials)
+LinkedIn: ✓ posted / ✗ failed — [error message] / — skipped (not selected / no credentials)
+Threads:  ✓ posted / ✗ failed — [error message] / — skipped (not selected / no token)
 ```
 
 ---
@@ -335,5 +317,6 @@ X:        ✓ posted / ✗ failed — [error message] / — skipped (no credenti
 ## What This Skill Does NOT Do
 
 - Does not create content from scratch — use /content-seo for that
-- Does not post to X natively — uses tweepy (pip3 install tweepy)
+- Does not post to X — X API requires a paid plan
 - Does not rewrite the article — it recaps and adapts
+- Does not skip the posting prompt — user selects platforms before any post is sent
