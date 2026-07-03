@@ -2,12 +2,66 @@
 name: seo-audit
 description: When the user wants to audit, review, or diagnose SEO issues on their site. Also use when the user mentions "SEO audit," "technical SEO," "why am I not ranking," "SEO issues," "on-page SEO," "meta tags review," "SEO health check," "my traffic dropped," "lost rankings," "not showing up in Google," "site isn't ranking," "Google update hit me," "page speed," "core web vitals," "crawl errors," or "indexing issues." Use this even if the user just says something vague like "my SEO is bad" or "help with SEO" — start with an audit. For building pages at scale to target keywords, see programmatic-seo. For adding structured data, see schema. For AI search optimization, see ai-seo.
 metadata:
-  version: 2.0.0
+  version: 2.2.0
 ---
 
 # SEO Audit
 
 You are an expert in search engine optimization. Your goal is to identify SEO issues and provide actionable recommendations to improve organic search performance.
+
+## GSC Integration
+
+If the active project has a `projects/[project]/config.env` with `GSC_KEY_PATH` set, pull live data before auditing. Run from `/Users/buithang/timbre/`:
+
+```bash
+# Search performance — top queries + pages (last 28 days)
+python3 scripts/gsc.py --project motquacam --mode analytics --days 28
+
+# Pages with high impressions but low CTR (<3%) — title/meta fix candidates
+python3 scripts/gsc.py --project motquacam --mode low_ctr --days 28
+
+# Sitemap coverage
+python3 scripts/gsc.py --project motquacam --mode sitemaps
+
+# Indexing status for a specific URL
+python3 scripts/gsc.py --project motquacam --mode inspect --url https://motquacam.com/sua-hat/
+
+# Queries driving traffic to a specific page
+python3 scripts/gsc.py --project motquacam --mode analytics --page https://motquacam.com/sua-hat/ --days 28
+```
+
+Parse the JSON output and incorporate findings into the audit report:
+- `verdict: PASS` = indexed. `FAIL` or `NEUTRAL` = investigate `coverage_state`
+- Low CTR pages → flag for title/meta rewrite
+- Position 4–15 with high impressions → quick-win ranking improvement candidates
+- Sitemap `errors > 0` → investigate
+
+## GA4 Integration
+
+If `GA4_PROPERTY_ID` is set in `projects/[project]/config.env`, pull behaviour data before auditing. Run from `/Users/buithang/timbre/`:
+
+```bash
+# Traffic channels breakdown
+python3 scripts/ga4.py --project motquacam --mode traffic_sources --days 28
+
+# Top pages by sessions
+python3 scripts/ga4.py --project motquacam --mode top_pages --days 28 --limit 30
+
+# Pages with high bounce rate — content/intent mismatch candidates
+python3 scripts/ga4.py --project motquacam --mode bounce_rate --days 28
+
+# Metrics for a specific page
+python3 scripts/ga4.py --project motquacam --mode page_metrics --url /sua-hat/ --days 28
+
+# Weekly trends — spot growing/declining pages (90 days)
+python3 scripts/ga4.py --project motquacam --mode trends --days 90
+```
+
+Cross-reference GA4 + GSC data for diagnosis:
+- High impressions (GSC) + high bounce (GA4) → ranking but not satisfying intent → rewrite angle
+- Low impressions (GSC) + low sessions (GA4) → not ranking yet → check indexing + keyword targeting
+- High engagement (GA4) + low CTR (GSC) → good content but weak title/meta → rewrite snippet
+- `engagement_rate < 30%` + `avg_session_duration_s < 15` → page not delivering on its promise
 
 ## Initial Assessment
 

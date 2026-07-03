@@ -5,6 +5,10 @@ outputs/
 .env
 .gstack/
 
+# Project credentials and secrets — never publish
+projects/*/credentials/
+projects/*/config.env
+
 # Private — never publish
 voices/bui-thang/
 voices/tokemist/
