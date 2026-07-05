@@ -7,12 +7,24 @@ set -e
 TIMBRE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SEEN_FILE="$TIMBRE_DIR/seen-urls.txt"
 SITEMAP_URL="https://tokemist.com/sitemap.xml"
+CONTENT_DIR="${TOKEMIST_CONTENT_DIR:-/Users/buithang/tokemist/web/content}"
 
 # Load credentials
 source "$TIMBRE_DIR/.env"
 
-# Fetch current article URLs from sitemap
-CURRENT_URLS=$(curl -s "$SITEMAP_URL" | grep -o '<loc>[^<]*</loc>' | sed 's/<[^>]*>//g' | grep "/vn/" | grep -v "/vn/$")
+# Article URLs come from the content dir (articles live at root level since the
+# /vn/ prefix was removed, so the sitemap alone can't tell them apart from hub
+# pages). Stubs are excluded. Only URLs also present in the live sitemap are
+# considered, so unpublished content is never posted.
+CANDIDATE_URLS=$(grep -L "^type: stub" "$CONTENT_DIR"/*/*/index.mdx \
+  | xargs -n1 dirname | xargs -n1 basename \
+  | sed 's|^|https://tokemist.com/|;s|$|/|')
+
+SITEMAP_URLS=$(curl -s "$SITEMAP_URL" | grep -o '<loc>[^<]*</loc>' | sed 's/<[^>]*>//g')
+
+CURRENT_URLS=$(comm -12 \
+  <(echo "$CANDIDATE_URLS" | sort) \
+  <(echo "$SITEMAP_URLS" | sort))
 
 # Find new URLs (in sitemap but not in seen file)
 NEW_URLS=$(comm -23 \
