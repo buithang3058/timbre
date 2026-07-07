@@ -1,5 +1,6 @@
 {
   "name": "timbre",
+  "description": "Timbre — voice-DNA capture, calibration, and SEO/GEO/AEO content workflows. Grow without losing your voice.",
   "owner": { "name": "buithang3058" },
   "plugins": [
     {
