@@ -1,0 +1,11 @@
+{
+  "name": "timbre",
+  "owner": { "name": "buithang3058" },
+  "plugins": [
+    {
+      "name": "timbre",
+      "source": "./",
+      "description": "Voice DNA + SEO/GEO/AEO content skill suite."
+    }
+  ]
+}
