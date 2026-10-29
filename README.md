@@ -71,19 +71,21 @@ Timbre runs as a set of Claude Code slash commands, grouped by stage.
 
 ---
 
-## The 4-Stage Writing Workflow
+## The Writing Workflow
+
+Four stages, two author decisions. AI never gets ahead of your thinking, and never ships a change to your argument without your sign-off.
 
 **Stage 1 — Perception Dump** *(human only, no AI)*
 You fill out 5 fields offline: what people get wrong, what predicts failure, what secretly matters, what changed your mind, what still bothers you. AI touches nothing until this is done.
 
 **Stage 2 — Research**
-SEMrush keyword data + semantic entity mapping + primary source verification for claims in your dump. Grounded in real data, not AI inference.
+`/seo-research` runs automatically: SEMrush keyword volume + intent, semantic entity mapping, and primary-source verification for the claims in your dump. Grounded in real data, not AI inference.
 
-**Stage 3 — Center of Gravity**
-Four article angle options generated from your dump. You pick the center: "This article is really about ___." The center is a lens, not a topic. It constrains everything in Stage 4.
+**Stage 3 — Center of Gravity** *(Decision 1)*
+Four article angles generated from your dump alone — the research is held back as a challenger, not an input. You pick the center: "This article is really about ___." It's a lens, not a topic; once approved it's locked and constrains everything in Stage 4.
 
-**Stage 4 — Draft → Cut → Discovery Loop**
-AI drafts against your center. Quality check flags voice anti-patterns, E-E-A-T signals, and semantic entity coverage. Cuts are proposed individually — you approve each one. Loop continues until you say done.
+**Stage 4 — Draft → Humanizer → Guard/Lint → Review → Approval** *(Decision 2)*
+AI drafts against the locked center, then the draft runs a pipeline: a humanizer pass, guard/lint checks, and a separate reviewer agent that flags voice anti-patterns, unverified claims, and E-E-A-T gaps. Wording-level findings get fixed; any finding that would change your thesis, framing, or conclusion is held for you — never applied silently. You give final approval, then image prompts are generated.
 
 ---
 
