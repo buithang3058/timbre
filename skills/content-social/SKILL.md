@@ -1,6 +1,6 @@
 ---
 name: content-social
-description: Transform newsletters, articles, and podcasts into platform-optimized social posts using 180+ proven templates. This skill uses the framework fitting method to extract standalone concepts, match them to proven formats, generate volume, and multiply winners. Use for repurposing long-form content to LinkedIn, Twitter/X, Facebook, and Instagram.
+description: Transform newsletters, articles, and podcasts into platform-optimized social posts using 200+ proven templates. This skill uses the framework fitting method to extract standalone concepts, match them to proven formats, generate volume, and multiply winners — all rendered in the loaded voice DNA. Use for repurposing long-form content to LinkedIn, Twitter/X, Facebook, and Instagram.
 ---
 
 # Social Content Creator
@@ -21,7 +21,7 @@ Content creation isn't about constantly coming up with new ideas. It's about tur
 - Generating multiple post options quickly
 - Multiplying high-performing posts using SCAMPER or desire reframing
 
-**Not for:** Short-form video captions (use `video-caption-creation`), podcast clip selection (separate workflow)
+**Not for:** Short-form video captions, podcast clip selection (out of scope — no dedicated skill in timbre yet)
 
 ---
 
@@ -39,7 +39,36 @@ The best framework might not be the obvious one.
 
 ---
 
-## The 4-Phase Workflow
+## The Workflow
+
+### Phase 0: Detect Project + Load Voice DNA
+
+**Before any writing**, detect the project and load its voice files.
+
+**Detect project from input:**
+
+| Input contains | Project |
+|----------------|---------|
+| `tokemist.com` or `drafts/tokemist/` or `tokemist` in path | tokemist |
+| `simplize.vn` or `drafts/simplize/` or `simplize` in path | simplize |
+| `motquacam` or `drafts/motquacam/` in path | motquacam |
+| Cannot determine | Ask: "Which project is this content for? tokemist / simplize / motquacam" |
+
+Once project is known, load silently:
+- `voices/bui-thang/dna.md` — author layer (always)
+- `voices/bui-thang/calibration.md` — sentence-level correction pairs
+- `voices/bui-thang/bad-almost-good.md` — anti-slop patterns
+- `voices/[project]/dna.md` — project layer
+
+If `voices/[project]/dna.md` does not exist — hard stop:
+```
+DNA file not found: voices/[project]/dna.md
+Run /voice-dna-writer [project] first, then retry.
+```
+
+**Template vs. DNA rule:** Templates dictate *structure* (hook placement, body shape, list format). DNA dictates *wording, tone, and language*. When a template's stylistic tic conflicts with a DNA anti-pattern (slogan closers, symmetrical punchlines, "here's the thing"), **DNA wins** — keep the skeleton, drop the tic.
+
+---
 
 ### Phase 1: Extract Standalone Concepts
 
@@ -113,6 +142,7 @@ Reference these when extracting concepts:
 2. **Review ALL Applicable Frameworks:**
    - LinkedIn templates (86+ options)
    - Text post structures (100+ options)
+   - Justin Welsh templates (15 formats + 19-row swipe table + hook bank)
    - Don't stop at first match
    - Consider at least 5-10 frameworks minimum
 
@@ -141,6 +171,11 @@ Reference these when extracting concepts:
 - 100+ proven tweet/post frameworks
 - Best for: X/Twitter, Facebook, Instagram captions
 - Categories: Comparisons, Lists, Challenges, Observations, Analogies
+
+**Justin Welsh Templates** (see `references/justin-welsh-templates.md`):
+- 15 signature formats, 15-hook bank, 4A content framework (Actionable/Analytical/Aspirational/Anthropological)
+- Best for: personal-brand posts, milestone stories, systems content, solopreneur/creator topics
+- Includes a Voice DNA conflicts table — check it before executing any Welsh template
 
 #### Document Framework Matches
 
@@ -191,11 +226,13 @@ Reference these when extracting concepts:
 
 1. **Load Framework Structure** - Reference the specific template
 2. **Fill with Concept Details** - Insert insight, context, examples
-3. **Apply Voice** - Match brand or individual voice style
+3. **Apply Voice DNA** - Render in the voice loaded in Phase 0: author layer (`voices/bui-thang/dna.md`) + project layer (`voices/[project]/dna.md`). Check every line against calibration pairs and anti-patterns. DNA overrides template wording.
 4. **Platform-Specific Optimization** - Apply rules below
 5. **Generate Variations** - Create 1-3 variations of same framework
 
 #### Platform-Specific Guidelines
+
+Extended rules (TikTok, YouTube Shorts, cross-platform matrix): `references/platform-guidelines.md`
 
 **LinkedIn:**
 - **Length:** Long-form value-dense posts outperform (200-500 words)
@@ -236,7 +273,7 @@ Reference these when extracting concepts:
 ---
 
 **Framework:** [Template used]
-**Voice:** [Brand/Individual]
+**Voice:** [project DNA applied, e.g. bui-thang + tokemist]
 **Word Count:** [Number]
 **Hashtags:** [If applicable]
 **Platform:** [Target platform]
@@ -250,6 +287,8 @@ Reference these when extracting concepts:
 - [ ] Sounds like a real person, not corporate
 - [ ] Would I say this to a friend?
 - [ ] Respects reader intelligence
+- [ ] No DNA anti-patterns (slogan closers, symmetrical insights, meta-narration, motivational filler)
+- [ ] Passes the calibration pairs in `voices/bui-thang/calibration.md`
 
 **Platform Compliance:**
 - [ ] Adheres to character limits
@@ -271,6 +310,8 @@ Reference these when extracting concepts:
 ### Phase 4: Proliferate Winners (OPTIONAL)
 
 **Goal:** Multiply high-performing posts using SCAMPER, Human Desires, and Vision reframing
+
+Full method details, examples, and the Vision/Anti-Vision framing method: `references/proliferation-methods.md`
 
 **When to use:**
 - Monthly: Study top performers and multiply them
@@ -435,22 +476,26 @@ A successful social post:
 ### Template Libraries
 - `references/linkedin-frameworks.md` - 136 LinkedIn templates
 - `references/post-structures.md` - 100+ text post frameworks
+- `references/justin-welsh-templates.md` - 15 Justin Welsh formats + 19-row swipe table + hook bank + 4A framework
 
 ### Proliferation Methods
-- `references/scamper-guide.md` - SCAMPER method with examples
-- `references/human-desires-guide.md` - 8 desires with reframing examples
+- `references/proliferation-methods.md` - SCAMPER, 8 Human Desires, Vision/Anti-Vision framing + proliferation workflow
 
 ### Platform Guidelines
-- `references/platform-guidelines.md` - Detailed platform rules
+- `references/platform-guidelines.md` - Detailed rules for LinkedIn, X, Facebook, Instagram, TikTok, YouTube Shorts
+
+### Voice Files (loaded in Phase 0)
+- `voices/bui-thang/` - author layer: dna.md, calibration.md, bad-almost-good.md
+- `voices/[project]/dna.md` - project layer (tokemist / simplize / motquacam)
 
 ---
 
 ## Related Skills
 
-- **hook-and-headline-writing** - Optimize post hooks
-- **anti-ai-writing** - Humanize posts that sound too polished
-- **voice-[style]** - Match posts to specific brand voice
-- **transcript-polisher** - Clean source transcripts first
+- **content-recap** - Lighter alternative: recap one article into platform posts without framework matching
+- **voice-dna-writer** - Create a project's `dna.md` if the Phase 0 hard stop triggers
+- **voice-calibration** - Improve calibration pairs when posts keep missing the voice
+- **content-hemingway** - Tighten drafts that come out bloated
 
 ---
 

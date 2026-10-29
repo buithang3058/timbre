@@ -4,16 +4,15 @@ node_modules/
 outputs/
 .env
 .gstack/
+.gbrain-source
+.agents/
 
 # Project credentials and secrets — never publish
 projects/*/credentials/
 projects/*/config.env
 
 # Private — never publish
-voices/bui-thang/
-voices/tokemist/
-voices/simplize/
-voices/motquacam/
+voices/
 drafts/
 PROJECT_CONTEXT.md
 IDEAS.md
@@ -21,3 +20,13 @@ TODOS.md
 AGENTS.md
 seen-urls.txt
 resources/
+projects/_shared/
+
+.claude/settings.local.json
+
+# Private harness files — local only, never publish (plugin chỉ ship skills/ + scripts/)
+CLAUDE.md
+CLAUDE.local.md
+contexte/
+livrables/
+sources/

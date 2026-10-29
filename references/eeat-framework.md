@@ -9,9 +9,11 @@ E-E-A-T = **E**xperience, **E**xpertise, **A**uthoritativeness, **T**rustworthin
 Trustworthiness is the most important factor. It is assessed based on the
 other three signals plus direct trust indicators.
 
-## CRITICAL: December 2025 Core Update
+## December 2025 Core Update — third-party interpretation, unsourced
 
-> **E-E-A-T now applies to ALL competitive queries, not just YMYL.**
+> **Label:** The claims, percentages, and the per-signal weights (20/25/25/30%) in this section and below come from third-party commentary and carry no source in this file. Google states E-E-A-T is not a single ranking factor. Treat this section as context, not as a constraint on drafting or reviewing. Google's own guidance: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+
+> E-E-A-T now applies to ALL competitive queries, not just YMYL. (unsourced)
 
 The December 2025 core update was described as a "watershed moment" that:
 - Extended E-E-A-T evaluation to virtually all competitive queries
@@ -41,7 +43,7 @@ Topics requiring **highest** E-E-A-T standards (but E-E-A-T now matters everywhe
 
 ---
 
-## Experience (Weight: 20%)
+## Experience (Weight, unsourced: 20%)
 
 First-hand knowledge and personal involvement with the topic.
 
@@ -61,7 +63,7 @@ First-hand knowledge and personal involvement with the topic.
 
 ---
 
-## Expertise (Weight: 25%)
+## Expertise (Weight, unsourced: 25%)
 
 Formal qualifications, training, and demonstrated knowledge.
 
@@ -81,7 +83,7 @@ Formal qualifications, training, and demonstrated knowledge.
 
 ---
 
-## Authoritativeness (Weight: 25%)
+## Authoritativeness (Weight, unsourced: 25%)
 
 Recognition by others as a go-to source.
 
@@ -102,7 +104,7 @@ Recognition by others as a go-to source.
 
 ---
 
-## Trustworthiness (Weight: 30%)
+## Trustworthiness (Weight, unsourced: 30%)
 
 The most important factor — overall reliability and transparency.
 

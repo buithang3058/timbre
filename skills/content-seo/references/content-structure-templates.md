@@ -1,6 +1,6 @@
 # Content Structure Templates
 
-Compact blueprints for common SEO formats. Replace placeholders, keep the primary keyword in the H1 and first 100 words, and remove sections that do not match intent.
+Compact blueprints for common SEO formats. Layout suggestions only — they never override voice rules. Replace placeholders, keep the primary keyword in the H1 and first 100 words, and remove sections that do not match intent.
 
 ## Shared Build Rules
 
@@ -8,10 +8,10 @@ Compact blueprints for common SEO formats. Replace placeholders, keep the primar
 |---------|---------|
 | Opening | Hook, problem, promise, primary keyword early |
 | Proof | Data, examples, quotes, first-hand experience, or source/date citations |
-| Structure | Clear H2/H3 hierarchy, short paragraphs, tables only for decisions |
+| Structure | Clear H2/H3 hierarchy, paragraph rhythm per voice DNA, tables only for decisions |
 | GEO | 40-60 word definition block, quotable takeaways, FAQ for long-tail retrieval |
-| Links | 3-5 internal links and 2-3 authoritative external links unless format needs more |
-| Ending | Recap, recommendation, and one next step or CTA |
+| Links | Internal links per tier rules in /content-seo; external citations per claim (R02), not per length |
+| Ending | One decision, implication, or next step. No recap (voice DNA) |
 
 ## Blueprint Matrix
 

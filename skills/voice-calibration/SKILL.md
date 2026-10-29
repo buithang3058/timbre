@@ -20,36 +20,27 @@ If `<voice>` is missing, use the first folder in `voices/`.
 
 ## Add Workflow
 
-Run:
+Ask the user for four fields (one message, all four): `AI-ish`, `Preferred`, `Why`, `Pattern`.
+
+Compute the next entry number and append to `voices/<voice>/calibration.md` using the Canonical Entry Schema below:
 
 ```bash
-scripts/voice-calibrate-add.sh <voice>
+N=$(( $(grep -c '^## Entry' voices/<voice>/calibration.md) + 1 ))
 ```
 
-The script prompts for four fields:
-
-1. `AI-ish`
-2. `Preferred`
-3. `Why`
-4. `Pattern`
-
-It appends to:
-
-```text
-voices/<voice>/calibration.md
-```
-
-If shell access is unavailable, tell the user to run the command manually and paste the result.
+Show the appended entry back to the user.
 
 ## Status Workflow
 
-Run:
+Report three numbers:
 
 ```bash
-scripts/voice-status.sh <voice>
+wc -w voices/<voice>/dna.md
+grep -c '^## Entry' voices/<voice>/calibration.md
+cat voices/<voice>/.last-merge 2>/dev/null || echo "never merged"
 ```
 
-Use the output before content writing and before deciding whether to merge.
+Entries added since `.last-merge` line 2 = unmerged backlog. Use this before deciding whether to merge.
 
 ## Review Workflow
 
@@ -80,7 +71,7 @@ Merge means converting raw calibration cases into durable DNA rules. The AI prop
 
 1. Read `voices/<voice>/dna.md`.
 2. Read `voices/<voice>/calibration.md`.
-3. Run `scripts/voice-status.sh <voice>`.
+3. Run the Status Workflow above.
 4. Extract repeated or high-confidence patterns.
 5. Propose a concise replacement or addition to `voices/<voice>/dna.md`.
 6. Show the proposed diff in chat.

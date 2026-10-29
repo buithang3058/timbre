@@ -1,5 +1,5 @@
 ---
-name: hemingway-style
+name: content-hemingway
 description: >
   Writes content using a selected voice's compact DNA and calibration status.
   Runs voice status before drafting and keeps output aligned with the DNA.

@@ -49,7 +49,7 @@ Check whether the project exists as a recognized entity across the web.
 
 ### 1A — Author Page
 
-Fetch the domain's `/about` or `/tac-gia` or `/author` page:
+Fetch the domain's `/about` or `/about-us` or `/tac-gia` or `/author` page:
 
 ```
 WebFetch: https://[domain]/about/

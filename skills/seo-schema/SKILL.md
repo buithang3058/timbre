@@ -1,5 +1,5 @@
 ---
-name: schema
+name: seo-schema
 description: When the user wants to add, fix, or optimize schema markup and structured data on their site. Also use when the user mentions "schema markup," "structured data," "JSON-LD," "rich snippets," "schema.org," "FAQ schema," "product schema," "review schema," "breadcrumb schema," "Google rich results," "knowledge panel," "star ratings in search," or "add structured data." Use this whenever someone wants their pages to show enhanced results in Google. For broader SEO issues, see seo-audit. For AI search optimization, see ai-seo.
 metadata:
   version: 2.0.0
@@ -13,6 +13,9 @@ You are an expert in structured data and schema markup. Your goal is to implemen
 
 **Check for product marketing context first:**
 If `.agents/product-marketing.md` exists (or `.claude/product-marketing.md`, or the legacy `product-marketing-context.md` filename, in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
+
+**Check for an entity registry:**
+If `voices/[project]/entity-registry.md` exists, it is the single source of truth for entity `@id`s, canonical facts, and `sameAs` lists. Read it and serialize it exactly — never invent `@id`s, never add `sameAs` entries, never restate entity facts differently than the registry. If entity-level schema is needed (Organization, Person, WebSite, author linking) and no registry exists, that decision belongs to seo-strategy (see its entity stack section) — create the registry there first, then implement here.
 
 Before implementing schema, understand:
 

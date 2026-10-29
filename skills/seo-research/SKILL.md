@@ -1,5 +1,5 @@
 ---
-name: research
+name: seo-research
 description: >
   SEMrush keyword intent analysis + primary source verification.
   Invoked after Stage 1 of /content-seo to replace AI-only Stage 2.
@@ -15,7 +15,7 @@ This skill runs real research so Stage 2 of /content-seo is grounded in actual d
 
 Three tools:
 1. **SEMrush phrase_this** — keyword volume + search intent (reads demand signal and reader awareness stage)
-2. **SEMrush phrase_related + WebFetch English** — semantic entity signal (identifies Tier 1/2/3 entities Google NLP expects for this topic)
+2. **SEMrush phrase_related + WebFetch English** — candidate sub-topics (Semrush relevance × H2 headings of one English reference page; advisory, not a Google ranking signal)
 3. **Web search** — primary source verification for claims in the Perception Dump
 
 ## Input
@@ -31,9 +31,9 @@ If no Stage 1 dump is found in context, ask:
 
 ## Step 1 — SEMrush Keyword Intent
 
-Read the API key (run from `/Users/buithang/timbre/` — where `.env` lives):
+Load the API key (run from `/Users/buithang/timbre/` — where `.env` lives). Never print any part of the key:
 ```bash
-source /Users/buithang/timbre/.env && echo "Key loaded: ${SEMRUSH_API_KEY:0:8}..."
+source /Users/buithang/timbre/.env && [ -n "$SEMRUSH_API_KEY" ] && echo "Key loaded" || echo "Key missing"
 ```
 
 Derive 4-6 keyword candidates from TOPIC + TARGET READER:
@@ -52,9 +52,11 @@ curl -s "https://api.semrush.com/?type=phrase_this&phrase=$KEYWORD&export_column
 
 Run one curl per keyword. Output format: `Keyword;Search Volume;Intent`
 
-Parse the response: Ph = keyword phrase, Nq = monthly search volume, In = intent bitmask (1=informational, 2=navigational, 4=commercial, 8=transactional; can combine, e.g., 5 = informational + commercial).
+Parse the response: Ph = keyword phrase, Nq = monthly search volume, In = intent code(s): `0` = commercial, `1` = informational, `2` = navigational, `3` = transactional. Multiple intents are comma-separated (e.g. `1,0` = informational + commercial). Not a bitmask.
 
-If volume is 0 or API returns no data — note it as "no data" and continue.
+**Read the response before interpreting it.** Semrush returns HTTP 200 with a body of `ERROR 50 :: NOTHING FOUND` when the database has no row for that phrase — that, and only that, is "no data": record `no data (ERROR 50)` for the keyword and continue. Any other `ERROR <n> :: <text>` (e.g. `ERROR 122 :: WRONG FORMAT OR EMPTY KEY`, HTTP 400; wrong key, units exhausted, rate limit) is an **API failure, not an absence of demand**: stop the Semrush steps, report the exact error line to the user, and do not proceed as if the keyword had no data. A returned row with volume `0` is **not** "no data": keep the row as returned (`0/month — [intent]`); the intent code is still information.
+
+If the main topic keyword itself returns `ERROR 50`, try at most two broader variants (drop the qualifier, e.g. "pruned node là gì" → "node là gì" → "node blockchain") before concluding the VN database has no demand data for this topic. Data found on a broader variant is a signal about the **parent topic**: report it under that keyword, do not attribute it to the original long-tail, and do not derive the long-tail's awareness stage from it. If the topic keyword and its variants all return `ERROR 50`, write `READER AWARENESS STAGE: UNKNOWN — no Semrush demand data`; do not infer a stage from training data.
 
 After all queries, determine: **which awareness stage is the TARGET READER at?**
 - Volume high on "what is X" → Unaware or Problem-aware
@@ -72,7 +74,7 @@ curl -s "https://api.semrush.com/?type=phrase_related&phrase=$KEYWORD&export_col
 
 Parse: Ph = phrase, Nq = volume, Rr = relevance score (0–1).
 
-If phrase_related returns no data: flag `[SEMrush no data — WebFetch-only, LOW confidence]` and proceed to Step 1c.
+If phrase_related returns `ERROR 50` (after the same broader-variant retry as Step 1): flag `[SEMrush no data — WebFetch-only, LOW confidence]` and proceed to Step 1c. Any other error → API failure, same handling as Step 1.
 
 ## Step 1c — Semantic Structure Signal (WebFetch English)
 
@@ -83,21 +85,21 @@ Fetch English authoritative sources to extract H2 headings. Try in order — sto
 
 Extract H2 headings from the fetched page. These represent the semantic sub-topics the source considers part of this topic.
 
-If 0/3 URLs succeed: flag `[WebFetch all failed — phrase_related only, MEDIUM confidence]` and proceed to Step 1d with phrase_related data only.
+If none of the three exact-title URLs resolve (Wikipedia 404 for a sub-topic title is common; Coinbase Learn may return 403), fall back once to the **parent topic's** Wikipedia article (e.g. "Pruned node" → `Bitcoin_Core` or `Blockchain`, found via `https://en.wikipedia.org/w/index.php?search=<topic>&ns0=1`) and take its H2s, noting that they describe the parent, not the sub-topic. From any page, keep only content headings related to the topic; drop navigation and boilerplate (References, Further reading, See also, External links). Two related headings are usable; ten unrelated ones are not. No related heading → this signal is empty. Only if that also fails: flag `[WebFetch all failed — phrase_related only, MEDIUM confidence]` and proceed to Step 1d with phrase_related data only. If both Semrush and WebFetch produced nothing, the CANDIDATE SUB-TOPICS block is `none — no data`, confidence `NONE`; Steps 2 and 3 still run, because claim verification and the coverage map do not depend on Semrush.
 
-## Step 1d — Cross-reference → Semantic Entity Map
+## Step 1d — Cross-reference → Candidate Sub-topics
 
-Cross-reference phrase_related Rr scores × English H2 headings:
+Cross-reference phrase_related Rr scores × English H2 headings. This is a signal from one keyword database and one reference page, not what Google "expects". Output is advisory: the approved center (Stage 3) decides what the article covers.
 
 | Condition | Tier |
 |-----------|------|
-| Rr ≥ 0.5 AND in English H2s | Tier 1 [HIGH] — must appear in draft |
-| Rr ≥ 0.3 AND in English H2s | Tier 1 [MEDIUM] — must appear |
-| Rr ≥ 0.5 OR in English H2s (not both) | Tier 2 — should appear |
-| Rr ≥ 0.3 only, not in H2s | Tier 2 [MEDIUM] |
-| Low Rr, not in H2s | Tier 3 — optional |
+| Rr ≥ 0.5 AND in English H2s | Strong candidate — readers of this topic usually expect it |
+| Rr ≥ 0.3 AND in English H2s | Candidate |
+| Rr ≥ 0.5 OR in English H2s (not both) | Weak candidate |
+| Rr ≥ 0.3 only, not in H2s | Weak candidate |
+| Low Rr, not in H2s | Note only |
 
-Note: When the approved center is known (Stage 3 of /content-seo), apply the Logical Chain Test to each Tier 1 candidate — "Is this entity in the logical chain leading to the center?" If no → downgrade to Tier 2 (mention-only, 1-2 sentences). In /research output, classify by data signal alone and flag candidates that may need downgrade after center is locked.
+Classify by data signal alone. The writer decides in Stage 4 which candidates the center needs; a candidate outside the center's logical chain may be a link to another article instead of a section.
 
 ## Step 2 — Primary Source Verification
 
@@ -119,9 +121,9 @@ For each question:
 - Note whether a Perception Dump field already addresses it (field N) or it is NOT in dump
 - For questions NOT in dump: run a web search and provide 1-3 evidence bullets from primary sources. Same source rules as Step 2 — no Medium, YouTube, Reddit, Twitter
 
-Minimum 7 questions. 8 if the topic has significant mechanism complexity. Fewer than 7 means the topic is under-scoped for a 1,500-word article.
+Aim for 5-8 questions. Fewer is acceptable for a narrow topic; do not pad.
 
-Also identify SERP format gap: given the primary keyword intent, what content format or angle is likely underrepresented in top results? (e.g., top results are all definitions → gap is mechanism explanation; all how-tos → gap is why-it-matters)
+Also identify SERP format gap **only from an observed SERP** (a fetched results page or the Semrush organic report for the keyword): what content format or angle is underrepresented in top results? (e.g., top results are all definitions → gap is mechanism explanation). If you did not observe the SERP, write "chưa xác định — chưa khảo sát SERP"; do not infer a gap from intent codes or training data.
 
 ## Output Format
 
@@ -133,28 +135,26 @@ Format exactly as follows:
 [RESEARCH OUTPUT — paste into Stage 2 of /content-seo]
 
 KEYWORD DEMAND (VN market):
-- "[keyword]": [volume]/month — [intent: informational|commercial|navigational|transactional]
-- "[keyword]": [volume]/month — [intent]
-- (repeat for all queried keywords)
+- "[keyword]": [volume]/month — [intent: informational|commercial|navigational|transactional]   (volume 0 stays "0/month — [intent]")
+- "[keyword]": no data (ERROR 50)
+- (repeat for all queried keywords; a broader variant that has data is listed as "[parent keyword] (parent topic, not the long-tail)")
 
-READER AWARENESS STAGE: [Unaware | Problem-aware | Solution-aware | Most-aware]
-→ Implication: [one sentence on what this means for hook and content depth]
+READER AWARENESS STAGE: [Unaware | Problem-aware | Solution-aware | Most-aware | UNKNOWN — no Semrush demand data]
+→ Implication: [one sentence on what this means for hook and content depth; if UNKNOWN: "not inferred — use TARGET READER from the dump"]
 
-SEMANTIC ENTITY MAP (Google ranking signal — entities Google NLP expects for this topic):
-- Tier 1 [HIGH]: [entity], [entity] — must appear in draft
-- Tier 1 [MEDIUM]: [entity] — must appear (lower confidence signal)
-- Tier 2: [entity], [entity] — should appear; frame through approved center
-- Tier 3: [entity] — optional; only if center touches them naturally
-- Confidence: [HIGH | MEDIUM | LOW] — [note if any data source failed]
-- Logical Chain Test pending: [entities that may need downgrade after center is locked, if any]
+CANDIDATE SUB-TOPICS (advisory — Semrush relevance × English H2s; the center decides coverage):
+- Strong: [topic], [topic]
+- Candidate: [topic]
+- Weak: [topic], [topic]
+- Confidence: [HIGH | MEDIUM | LOW | NONE] — [which data source failed and how: ERROR 50 / WebFetch 404-403 / parent page only]
+- (when both signals are empty, this block is exactly: "none — no data" + Confidence: NONE; do not fill topics from training data)
 
-CLAIM VERIFICATION:
-- "[exact claim from dump field N]"
-  → CONFIRMED: [URL]
-- "[exact claim from dump field N]"
-  → UNVERIFIABLE: no primary source found — verify before publishing
-- "[exact claim from dump field N]"
-  → CONTRADICTED: [URL] — [what the source actually says]
+CLAIM VERIFICATION (fixed table — /content-review reads this by machine; keep the columns exactly):
+| Claim (exact wording from dump, field N) | Status | Source |
+|---|---|---|
+| "[claim]" | CONFIRMED | [URL] |
+| "[claim]" | UNVERIFIABLE | no primary source found — author to verify |
+| "[claim]" | CONTRADICTED | [URL] — [what the source actually says] |
 
 RAW EVIDENCE BULLETS (verifiable facts with source):
 - [fact] — source: [URL]
@@ -169,20 +169,17 @@ COVERAGE MAP (reader comprehension — questions reader needs answered to unders
 - [question] — NOT in dump
   → [evidence bullet] — source: [URL]
   → [evidence bullet] — source: [URL]
-- (5-8 questions total; omit evidence section for covered questions)
+- (5-8 questions total; omit evidence section for covered questions. When keyword data is empty, questions come only from the dump and from sources actually found; do not add questions to reach a count)
 
 SERP FORMAT GAP:
-- [what format or angle top results are likely missing for this keyword]
+- [what format or angle top results are missing for this keyword — only if you fetched or otherwise observed the SERP; otherwise write exactly: "chưa xác định — chưa khảo sát SERP"]
 ```
 
 ## After Output
 
-Say:
-> "Research done. Use this as your Stage 2 results in /content-seo. Does anything here change or sharpen your Perception Dump? If not, reply 'proceed to Stage 3'."
+Return control to /content-seo immediately. Do not ask the user a question here — /content-seo presents the research as a challenger during center selection (Stage 3), which is the author's single decision point for research.
 
-**STOP. Wait for user response.**
-
-This skill does NOT run Stage 3 or 4. Control returns to /content-seo after user confirms.
+This skill does NOT run Stage 3 or 4.
 
 ## What This Skill Does NOT Do
 

@@ -2,66 +2,12 @@
 name: seo-audit
 description: When the user wants to audit, review, or diagnose SEO issues on their site. Also use when the user mentions "SEO audit," "technical SEO," "why am I not ranking," "SEO issues," "on-page SEO," "meta tags review," "SEO health check," "my traffic dropped," "lost rankings," "not showing up in Google," "site isn't ranking," "Google update hit me," "page speed," "core web vitals," "crawl errors," or "indexing issues." Use this even if the user just says something vague like "my SEO is bad" or "help with SEO" — start with an audit. For building pages at scale to target keywords, see programmatic-seo. For adding structured data, see schema. For AI search optimization, see ai-seo.
 metadata:
-  version: 2.2.0
+  version: 2.0.0
 ---
 
 # SEO Audit
 
-You are an expert in search engine optimization. Your goal is to identify SEO issues and provide actionable recommendations to improve organic search performance.
-
-## GSC Integration
-
-If the active project has a `projects/[project]/config.env` with `GSC_KEY_PATH` set, pull live data before auditing. Run from `/Users/buithang/timbre/`:
-
-```bash
-# Search performance — top queries + pages (last 28 days)
-python3 scripts/gsc.py --project motquacam --mode analytics --days 28
-
-# Pages with high impressions but low CTR (<3%) — title/meta fix candidates
-python3 scripts/gsc.py --project motquacam --mode low_ctr --days 28
-
-# Sitemap coverage
-python3 scripts/gsc.py --project motquacam --mode sitemaps
-
-# Indexing status for a specific URL
-python3 scripts/gsc.py --project motquacam --mode inspect --url https://motquacam.com/sua-hat/
-
-# Queries driving traffic to a specific page
-python3 scripts/gsc.py --project motquacam --mode analytics --page https://motquacam.com/sua-hat/ --days 28
-```
-
-Parse the JSON output and incorporate findings into the audit report:
-- `verdict: PASS` = indexed. `FAIL` or `NEUTRAL` = investigate `coverage_state`
-- Low CTR pages → flag for title/meta rewrite
-- Position 4–15 with high impressions → quick-win ranking improvement candidates
-- Sitemap `errors > 0` → investigate
-
-## GA4 Integration
-
-If `GA4_PROPERTY_ID` is set in `projects/[project]/config.env`, pull behaviour data before auditing. Run from `/Users/buithang/timbre/`:
-
-```bash
-# Traffic channels breakdown
-python3 scripts/ga4.py --project motquacam --mode traffic_sources --days 28
-
-# Top pages by sessions
-python3 scripts/ga4.py --project motquacam --mode top_pages --days 28 --limit 30
-
-# Pages with high bounce rate — content/intent mismatch candidates
-python3 scripts/ga4.py --project motquacam --mode bounce_rate --days 28
-
-# Metrics for a specific page
-python3 scripts/ga4.py --project motquacam --mode page_metrics --url /sua-hat/ --days 28
-
-# Weekly trends — spot growing/declining pages (90 days)
-python3 scripts/ga4.py --project motquacam --mode trends --days 90
-```
-
-Cross-reference GA4 + GSC data for diagnosis:
-- High impressions (GSC) + high bounce (GA4) → ranking but not satisfying intent → rewrite angle
-- Low impressions (GSC) + low sessions (GA4) → not ranking yet → check indexing + keyword targeting
-- High engagement (GA4) + low CTR (GSC) → good content but weak title/meta → rewrite snippet
-- `engagement_rate < 30%` + `avg_session_duration_s < 15` → page not delivering on its promise
+You are an expert in search engine optimization. You really good at SEO for YMYL niche. Your goal is to identify SEO issues and provide actionable recommendations to improve organic search performance.
 
 ## Initial Assessment
 
@@ -163,14 +109,9 @@ Reporting "no schema found" based solely on `web_fetch` or `curl` leads to false
 ### Site Speed & Core Web Vitals
 
 **Core Web Vitals**
-- LCP (Largest Contentful Paint): < 2.5s good, > 4s poor
-- INP (Interaction to Next Paint): < 200ms good, > 500ms poor
-- CLS (Cumulative Layout Shift): < 0.1 good, > 0.25 poor
-
-For LCP subparts, bottlenecks, and measurement tools — read before auditing:
-```
-Read: ~/.claude/skills/seo/resources/references/cwv-thresholds.md
-```
+- LCP (Largest Contentful Paint): < 2.5s
+- INP (Interaction to Next Paint): < 200ms
+- CLS (Cumulative Layout Shift): < 0.1
 
 **Speed Factors**
 - Server response time (TTFB)
@@ -180,6 +121,12 @@ Read: ~/.claude/skills/seo/resources/references/cwv-thresholds.md
 - Caching headers
 - CDN usage
 - Font loading
+
+**Tools**
+- PageSpeed Insights
+- WebPageTest
+- Chrome DevTools
+- Search Console Core Web Vitals report
 
 ### Mobile-Friendliness
 
@@ -230,7 +177,7 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 
 ### Canonicalization for Multilingual Sites
 
-- Each locale page must self-canonical (e.g., `/ar/page` canonicals to `/ar/page`)
+- Each locale page must self-canonical (e.g., `/vn/page` canonicals to `/vn/page`)
 - Never cross-locale canonical (French to English) -- suppresses the non-canonical locale entirely
 - Canonical URL must appear in the hreflang set -- if not, all hreflang is ignored
 - Canonical overrides hreflang when they conflict
@@ -250,7 +197,7 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 
 ### Locale URL Structure
 
-**Recommended:** Subdirectories (`/en/`, `/ar/`). **Acceptable:** Subdomains or ccTLDs. **Not recommended:** URL parameters (`?lang=en`).
+**Recommended:** Subdirectories (`/en/`, `/vn/`). **Acceptable:** Subdomains or ccTLDs. **Not recommended:** URL parameters (`?lang=en`).
 
 **Check for:**
 - Consistent locale prefix strategy; all locales prefixed (hiding locale from URLs prevents Google from distinguishing versions)
@@ -289,6 +236,7 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 **Check for:**
 - Unique titles for each page
 - Primary keyword near beginning
+- 50-60 characters (visible in SERP)
 - Compelling and click-worthy
 - Brand name placement (end, usually)
 
@@ -299,12 +247,11 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 - Keyword stuffing
 - Missing entirely
 
-→ Length requirements and examples: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
-
 ### Meta Descriptions
 
 **Check for:**
 - Unique descriptions per page
+- 150-160 characters
 - Includes primary keyword
 - Clear value proposition
 - Call to action
@@ -314,8 +261,6 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 - Auto-generated garbage
 - Too long/short
 - No compelling reason to click
-
-→ Length requirements and examples: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
 
 ### Heading Structure
 
@@ -351,12 +296,12 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 
 **Check for:**
 - Descriptive file names
+- Alt text on all images
+- Alt text describes image
 - Compressed file sizes
 - Modern formats (WebP)
 - Lazy loading implemented
 - Responsive images
-
-→ Alt text requirements, length, and examples: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
 
 ### Internal Linking
 
@@ -365,14 +310,13 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 - Descriptive anchor text
 - Logical link relationships
 - No broken internal links
+- Reasonable link count per page
 
 **Common issues:**
 - Orphan pages (no internal links)
 - Over-optimized anchor text
 - Important pages buried
 - Excessive footer/sidebar links
-
-→ Link count targets per page type and anchor text rules: see [quality-gates.md](~/.claude/skills/seo/resources/references/quality-gates.md)
 
 ### Keyword Targeting
 
@@ -392,23 +336,7 @@ Three equivalent placement methods: HTML `<link>` in `<head>`, HTTP `Link` heade
 
 ## Content Quality Assessment
 
-### E-E-A-T Signals
-
-→ Full framework with weights (Experience 20%, Expertise 25%, Authority 25%, Trust 30%), scoring rubric (0–100), December 2025 core update impact, and improvement recommendations by score: see [eeat-framework.md](~/.claude/skills/seo/resources/references/eeat-framework.md)
-
-### Content Depth
-
-- Comprehensive coverage of topic
-- Answers follow-up questions
-- Better than top-ranking competitors
-- Updated and current
-
-### User Engagement Signals
-
-- Time on page
-- Bounce rate in context
-- Pages per session
-- Return visits
+Read [Website Assessment](references/website-assessment.md) for site-level content, author/business trust, evidence limits and findings. Use only the dimensions relevant to this audit. Technical and on-page checks remain in the sections above; do not apply website reputation criteria as a mandatory checklist for drafting one article.
 
 ---
 
@@ -487,11 +415,10 @@ Same format as above
 
 ## References
 
+- [Website Assessment](references/website-assessment.md): Site content/trust assessment and scoped use of the shared SEO/E-E-A-T background documents
+
 - [AI Writing Detection](references/ai-writing-detection.md): Common AI writing patterns to avoid (em dashes, overused phrases, filler words)
 - [International SEO](references/international-seo.md): Evidence and sources for hreflang, canonical + i18n, sitemaps, URL structure, and content quality across locales
-- [CWV Thresholds](~/.claude/skills/seo/resources/references/cwv-thresholds.md): LCP/INP/CLS thresholds, LCP subparts, bottlenecks, measurement tools (updated Feb 2026)
-- [E-E-A-T Framework](~/.claude/skills/seo/resources/references/eeat-framework.md): Full scoring rubric with weights, Dec 2025 core update impact, recommendations by score
-- [Quality Gates](~/.claude/skills/seo/resources/references/quality-gates.md): Word counts by page type, title/meta lengths, alt text rules, internal link counts, content freshness
 - For AI search optimization (AEO, GEO, LLMO, AI Overviews), see the **ai-seo** skill
 
 ---

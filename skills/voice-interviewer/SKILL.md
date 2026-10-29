@@ -1,5 +1,5 @@
 ---
-name: interviewer
+name: voice-interviewer
 description: >
   Voice interviewer for Timbre. Extracts source material for a Writing DNA
   file through a structured one-question-at-a-time interview. Supports --quick mode.
