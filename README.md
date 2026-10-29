@@ -87,13 +87,27 @@ AI drafts against your center. Quality check flags voice anti-patterns, E-E-A-T 
 
 ---
 
+## Beyond the Draft
+
+Writing is the core, but a voice only compounds if it reaches people. Timbre extends the same voice-first discipline across the rest of the pipeline.
+
+**Search visibility (SEO / GEO / AEO).** A full search layer, not a checklist. `/seo-strategy` plans site architecture, internal linking, and topical maps; `/seo-audit` diagnoses on-page and technical issues; `/seo-schema` ships JSON-LD. Then the newer surfaces: `/seo-aeo` targets zero-click results (featured snippets, People Also Ask, knowledge panels) and `/seo-geo` targets AI answers (AI Overviews, ChatGPT, Perplexity) — because ranking now means being quoted, not just listed.
+
+**Link acquisition.** `/seo-linkbuilding` classifies your site's authority phase from its age and backlink profile, then recommends only the tactics that fit that phase — with safety rails on anchor text and link velocity so growth doesn't trip spam filters.
+
+**Brand foundation.** `/brand-identity-wizard` and `/brand-strategy` build the brand layer other skills reference — persona, values, positioning. `/brand-seo` then audits how strongly that brand registers as an entity in search: branded volume, E-E-A-T signals, and unlinked mentions.
+
+**Distribution.** One piece of thinking should travel. `/content-social` turns a newsletter, article, or podcast into platform-native posts; `/content-recap` repackages an existing article into X / LinkedIn / Facebook / Threads; `/image-prompt` generates brand-aligned image prompts from approved content — all in your voice, never generic.
+
+**Multi-project.** `/project` (alias `/active`) runs several sites or brands from one system — each with its own project layer, all sharing the author voice layer.
+
+---
+
 ## Roadmap
 
-- **Social format skills** — tweet/thread, LinkedIn post with format-specific structure rules
 - **Reader engagement feedback loop** — GA4 + scroll depth data feeds back into calibration entries, giving voice rules evidence beyond gut feeling
 - **Failure taxonomy engine** — aggregates correction pairs across articles into a ranked, categorized pattern library (the compounding asset)
 - **Dynamic calibration loading** — at 50+ entries, load only the patterns relevant to the current topic
-- **Multi-site support** — run multiple websites or brand voices from one system, each with its own project layer
 
 ---
 
