@@ -1,6 +1,6 @@
 {
   "name": "timbre",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "extract:pairs": "node scripts/extract-pairs.js",

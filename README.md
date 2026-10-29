@@ -30,17 +30,44 @@ The challenge: using AI at scale without losing what makes your voice distinct.
 
 ## Current Skills
 
-Timbre runs as a set of Claude Code slash commands:
+Timbre runs as a set of Claude Code slash commands, grouped by stage.
 
+**Voice**
 | Skill | What it does |
 |-------|-------------|
-| `/content-seo` | 4-stage writing workflow: Perception Dump → Research → Center of Gravity → Draft |
-| `/seo-research` | SEMrush keyword volume + intent, semantic entity map, claim verification |
-| `/voice-dna-writer` | Extracts your writing voice into a compact DNA file (≤500 words) |
 | `/voice-interviewer` | Structured interview to surface raw voice source material |
+| `/voice-dna-writer` | Extracts your writing voice into a compact DNA file (≤500 words) |
 | `/voice-calibration` | Log AI-ish → preferred correction pairs; build your pattern library |
+
+**Project & Brand**
+| Skill | What it does |
+|-------|-------------|
+| `/project` (alias `/active`) | Create, select, or inspect a Timbre project and its voice/content config |
+| `/brand-identity-wizard` | Build a brand identity document other skills can reference |
+| `/brand-strategy` | 7-part brand strategy framework for brand foundations |
+| `/brand-seo` | Audit brand authority signals — entity, E-E-A-T, branded search |
+
+**Content**
+| Skill | What it does |
+|-------|-------------|
+| `/content-seo` | Perception-first article workflow: Perception Dump → Research → Center → Draft → Humanizer → Review |
 | `/content-strategy` | Prioritized writing queue based on hub gaps and keyword opportunity |
-| `/content-hemingway` | Cut and tighten pass after draft is complete |
+| `/content-hemingway` | Cut and tighten pass after the draft is complete |
+| `/content-review` | Reports draft quality against voice + anti-slop taxonomy (report-only) |
+| `/content-social` | Turn newsletters, articles, and podcasts into platform-native social posts |
+| `/content-recap` | Recap an existing article into X / LinkedIn / Facebook / Threads posts in your voice |
+| `/image-prompt` | Generate brand-aligned image prompts from approved content |
+
+**SEO / GEO / AEO**
+| Skill | What it does |
+|-------|-------------|
+| `/seo-research` | SEMrush keyword volume + intent, semantic entity map, claim verification |
+| `/seo-strategy` | Strategy-level SEO planning: architecture, internal linking, topical maps |
+| `/seo-audit` | Audit and diagnose on-page and technical SEO issues |
+| `/seo-schema` | Add, fix, or optimize schema markup (JSON-LD) |
+| `/seo-aeo` | Answer Engine Optimization — featured snippets, People Also Ask, knowledge panel |
+| `/seo-geo` | Generative Engine Optimization — AI Overviews, ChatGPT / Perplexity visibility |
+| `/seo-linkbuilding` | Plan link acquisition by authority phase with safe tactics |
 
 ---
 
