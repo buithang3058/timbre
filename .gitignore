@@ -11,8 +11,11 @@ outputs/
 projects/*/credentials/
 projects/*/config.env
 
-# Private — never publish
-voices/
+# Private — never publish (voices/example + voices/mark-helfman là voice mẫu, được publish)
+voices/bui-thang/
+voices/tokemist/
+voices/simplize/
+voices/motquacam/
 drafts/
 PROJECT_CONTEXT.md
 IDEAS.md
