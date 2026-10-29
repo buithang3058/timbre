@@ -10,7 +10,7 @@ projects/<project>/config.env as INDEXNOW_KEY, next to BING_SITE_URL.
 
 Usage:
   python3 scripts/indexnow.py --project tokemist --mode genkey
-      --keyfile-dir /Users/buithang/tokemist/web/public   # also drops <key>.txt
+      --keyfile-dir /path/to/site/public   # also drops <key>.txt
   python3 scripts/indexnow.py --project tokemist --mode verify
   python3 scripts/indexnow.py --project tokemist --mode submit \
       --url https://tokemist.com/a/ --url https://tokemist.com/b/

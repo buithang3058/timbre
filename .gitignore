@@ -33,3 +33,7 @@ CLAUDE.local.md
 contexte/
 livrables/
 sources/
+
+# Project-specific ops scripts — local only, never publish
+scripts/auto-social.sh
+scripts/simplize-health.sh

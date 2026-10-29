@@ -25,7 +25,7 @@ Use only dimensions relevant to the request. The main `seo-audit/SKILL.md` owns 
 
 ## References and evidence limits
 
-Resolve shared references from `/Users/buithang/timbre/`:
+Resolve shared references from `${CLAUDE_PLUGIN_ROOT}/`:
 - `references/google-seo-reference.md`: consult relevant sections for Search concepts, technical measurements, structured data or diagnostics; do not load the whole file for every audit.
 - `references/eeat-framework.md`: legacy background only when deeper context is needed. Its unsupported update claims, weights and score bands are not an authoritative scoring system and must not determine findings.
 

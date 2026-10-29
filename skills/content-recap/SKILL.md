@@ -163,11 +163,11 @@ After presenting the output, ask:
 
 If E: stop here.
 
-For A–D: check credentials and run the relevant posting sequences below. Read credentials from `/Users/buithang/timbre/.env`.
+For A–D: check credentials and run the relevant posting sequences below. Read credentials from `${CLAUDE_PLUGIN_ROOT}/.env`.
 
 Check which credentials are present:
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 echo "FB_PAGE_ID=${FB_PAGE_ID:+SET}"
 echo "FB_PAGE_ACCESS_TOKEN=${FB_PAGE_ACCESS_TOKEN:+SET}"
 echo "LINKEDIN_ACCESS_TOKEN=${LINKEDIN_ACCESS_TOKEN:+SET}"
@@ -181,14 +181,14 @@ echo "X_ACCESS_TOKEN_SECRET=${X_ACCESS_TOKEN_SECRET:+SET}"
 
 Before posting to Threads, auto-refresh the token if it's within 7 days of expiry:
 ```bash
-/Users/buithang/timbre/scripts/threads-token.sh refresh
+${CLAUDE_PLUGIN_ROOT}/scripts/threads-token.sh refresh
 ```
 If refresh fails with "expired" or "invalid token": print instructions below and skip Threads. Do not stop other platforms.
 
 Post to the platforms selected by the user. Skip silently if credentials are missing for a selected platform — list it as skipped in the summary. X is not supported (requires paid API plan).
 
 If Threads token is expired and refresh failed:
-> "Threads token expired. Run: cd /Users/buithang/timbre && ./scripts/threads-token.sh exchange <new_short_lived_token>
+> "Threads token expired. Run: cd ${CLAUDE_PLUGIN_ROOT} && ./scripts/threads-token.sh exchange <new_short_lived_token>
 > Get a new short-lived token at: Meta app dashboard → Threads API → Getting Started"
 
 ---
@@ -199,13 +199,13 @@ Split the Facebook post: body text → `FB_TEXT`, article URL → `FB_LINK`.
 
 **Step 1 — Force scrape (ensures image appears in preview):**
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 curl -s -X POST "https://graph.facebook.com/?id=${FB_LINK}&scrape=true&access_token=${FB_PAGE_ACCESS_TOKEN}" > /dev/null
 ```
 
 **Step 2 — Post:**
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 FB_RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/${FB_PAGE_ID}/feed" \
   --data-urlencode "message=${FB_TEXT}" \
   --data-urlencode "link=${FB_LINK}" \
@@ -225,7 +225,7 @@ LinkedIn requires the post text and article URL combined into a JSON payload. Th
 Use `LINKEDIN_AUTHOR_URN` from `.env` — either `urn:li:person:{id}` (personal profile) or `urn:li:organization:{id}` (company page).
 
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 LI_PAYLOAD=$(python3 -c "
 import json, sys
 text = sys.argv[1]
@@ -271,13 +271,13 @@ For multi-post thread (3–5 posts): create and publish post 1, then create and 
 
 **Step 1 — Get user ID:**
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 curl -s "https://graph.threads.net/v1.0/me?fields=id&access_token=${THREADS_ACCESS_TOKEN}"
 ```
 
 **Step 2 — Create container for each post:**
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 # First post (no reply_to_id)
 CONTAINER=$(curl -s -X POST "https://graph.threads.net/v1.0/${THREADS_USER_ID}/threads" \
   --data-urlencode "text=${POST_TEXT}" \
@@ -290,7 +290,7 @@ CONTAINER_ID=$(echo "$CONTAINER" | python3 -c "import json,sys; print(json.load(
 
 **Step 3 — Publish (wait 3s after container creation before publishing):**
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 sleep 3
 PUBLISH=$(curl -s -X POST "https://graph.threads.net/v1.0/${THREADS_USER_ID}/threads_publish" \
   -d "creation_id=${CONTAINER_ID}" \
@@ -299,7 +299,7 @@ echo "$PUBLISH"
 ```
 
 - Response contains `"id"` → success. Say "Threads posted ✓"
-- Response contains `"error"` → extract `error.message`, display it. If error_subcode is 190 (expired token): say "Threads token expired — refresh at Meta developer dashboard and update THREADS_ACCESS_TOKEN in /Users/buithang/timbre/.env"
+- Response contains `"error"` → extract `error.message`, display it. If error_subcode is 190 (expired token): say "Threads token expired — refresh at Meta developer dashboard and update THREADS_ACCESS_TOKEN in ${CLAUDE_PLUGIN_ROOT}/.env"
 
 ---
 

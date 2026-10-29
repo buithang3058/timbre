@@ -1,6 +1,6 @@
 # content-recap — Social Auto-Post Setup
 
-Add these variables to `/Users/buithang/timbre/.env`:
+Add these variables to `${CLAUDE_PLUGIN_ROOT}/.env`:
 
 ```
 FB_PAGE_ID=
@@ -97,7 +97,7 @@ Add to `.env`: `LINKEDIN_AUTHOR_URN=urn:li:person:ABC123` (or `urn:li:organizati
 ## Verify setup
 
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 echo "FB_PAGE_ID: ${FB_PAGE_ID:0:6}..."
 echo "FB_PAGE_ACCESS_TOKEN: ${FB_PAGE_ACCESS_TOKEN:0:8}..."
 echo "LINKEDIN_ACCESS_TOKEN: ${LINKEDIN_ACCESS_TOKEN:0:8}..."

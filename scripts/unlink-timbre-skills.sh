@@ -3,7 +3,7 @@
 # Run this AFTER installing the Timbre plugin, so skills load from the
 # plugin instead of the symlinks (otherwise they'd double-load).
 #
-# Only removes symlinks whose target points into /Users/buithang/timbre/.
+# Only removes symlinks whose target points into this Timbre repo.
 # gstack skills, .agents skills, and real directories are left untouched.
 #
 # Usage:
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 SKILLS_DIR="$HOME/.claude/skills"
-TIMBRE_ROOT="/Users/buithang/timbre/"
+TIMBRE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/"
 APPLY=0
 [[ "${1:-}" == "--apply" ]] && APPLY=1
 

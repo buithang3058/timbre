@@ -31,9 +31,9 @@ If no Stage 1 dump is found in context, ask:
 
 ## Step 1 — SEMrush Keyword Intent
 
-Load the API key (run from `/Users/buithang/timbre/` — where `.env` lives). Never print any part of the key:
+Load the API key (run from `${CLAUDE_PLUGIN_ROOT}/` — where `.env` lives). Never print any part of the key:
 ```bash
-source /Users/buithang/timbre/.env && [ -n "$SEMRUSH_API_KEY" ] && echo "Key loaded" || echo "Key missing"
+source ${CLAUDE_PLUGIN_ROOT}/.env && [ -n "$SEMRUSH_API_KEY" ] && echo "Key loaded" || echo "Key missing"
 ```
 
 Derive 4-6 keyword candidates from TOPIC + TARGET READER:
@@ -45,7 +45,7 @@ Derive 4-6 keyword candidates from TOPIC + TARGET READER:
 
 For each keyword, URL-encode it first (required for Vietnamese characters), then run:
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 KEYWORD=$(python3 -c "import urllib.parse; print(urllib.parse.quote('KEYWORD_HERE'))")
 curl -s "https://api.semrush.com/?type=phrase_this&phrase=$KEYWORD&export_columns=Ph,Nq,In&database=vn&key=$SEMRUSH_API_KEY"
 ```
@@ -67,7 +67,7 @@ After all queries, determine: **which awareness stage is the TARGET READER at?**
 
 For the primary keyword (main topic), run phrase_related to get semantically associated terms:
 ```bash
-source /Users/buithang/timbre/.env
+source ${CLAUDE_PLUGIN_ROOT}/.env
 KEYWORD=$(python3 -c "import urllib.parse; print(urllib.parse.quote('KEYWORD_HERE'))")
 curl -s "https://api.semrush.com/?type=phrase_related&phrase=$KEYWORD&export_columns=Ph,Nq,Rr&database=vn&key=$SEMRUSH_API_KEY&display_limit=20"
 ```
