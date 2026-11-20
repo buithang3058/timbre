@@ -37,3 +37,8 @@ sources/
 # Project-specific ops scripts — local only, never publish
 scripts/auto-social.sh
 scripts/simplize-health.sh
+
+# Local work-product — project workspaces, planning, skill eval/research runs (keep local)
+projects/
+planning/
+research/
