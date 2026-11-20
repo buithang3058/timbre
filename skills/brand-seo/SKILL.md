@@ -121,15 +121,9 @@ Search for external sites citing Bui Thang or the project:
 ```
 WebSearch: "tokemist" -site:tokemist.com
 WebSearch: "Bui Thang" crypto Vietnam
-WebSearch: site:tokemist.com (via Semrush backlink_research)
 ```
 
-Use Semrush `backlink_research` for domain:
-
-```
-Tool: backlink_research
-Input: domain = [domain], limit = 20
-```
+SEMrush is disabled in Timbre. Inspect the external pages found by web search and any available first-party backlink exports. Record source URLs; without a backlink dataset, mark total referring domains unavailable rather than treating search results as an exhaustive count.
 
 Check for:
 - Number of referring domains
@@ -154,30 +148,9 @@ Flag articles that:
 
 ## Step 3 — Branded Search Tracking
 
-Pull branded keyword volume from Semrush to measure real-world recognition.
+Use available GSC/Bing data or user-provided exports for brand-name and domain-name queries. Record source, date range, and market. Compare matching periods when describing trends.
 
-```
-Tool: keyword_research
-Input: keyword = "[project name]", database = "vn"
-
-Tool: keyword_research  
-Input: keyword = "[domain without TLD]", database = "vn"
-
-Tool: overview_research
-Input: domain = [domain], database = "vn"
-```
-
-Extract:
-- Monthly search volume for brand name
-- Search volume trend (growing / flat / declining)
-- Domain authority score
-- Estimated monthly organic traffic
-- Number of ranking keywords
-
-Interpret:
-- Brand volume < 100/month → entity not yet established
-- Brand volume 100-500/month → early recognition
-- Brand volume > 500/month → established entity
+Report impressions, clicks, and rankings only under their actual metric names; they are not monthly search volume or estimated total organic traffic. Search volume and domain authority are unavailable without a source that measures them. Do not call SEMrush, request its credentials, or infer entity establishment from missing metrics.
 
 ---
 

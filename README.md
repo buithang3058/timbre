@@ -61,7 +61,7 @@ Timbre runs as a set of Claude Code slash commands, grouped by stage.
 **SEO / GEO / AEO**
 | Skill | What it does |
 |-------|-------------|
-| `/seo-research` | SEMrush keyword volume + intent, semantic entity map, claim verification |
+| `/seo-research` | Web keyword intent research, source-backed sub-topics, claim verification |
 | `/seo-strategy` | Strategy-level SEO planning: architecture, internal linking, topical maps |
 | `/seo-audit` | Audit and diagnose on-page and technical SEO issues |
 | `/seo-schema` | Add, fix, or optimize schema markup (JSON-LD) |
@@ -79,7 +79,7 @@ Four stages, two author decisions. AI never gets ahead of your thinking, and nev
 You fill out 5 fields offline: what people get wrong, what predicts failure, what secretly matters, what changed your mind, what still bothers you. AI touches nothing until this is done.
 
 **Stage 2 — Research**
-`/seo-research` runs automatically: SEMrush keyword volume + intent, semantic entity mapping, and primary-source verification for the claims in your dump. Grounded in real data, not AI inference.
+`/seo-research` runs automatically: Web keyword intent research, source-backed sub-topics, and primary-source verification for the claims in your dump. Grounded in real data, not AI inference.
 
 **Stage 3 — Center of Gravity** *(Decision 1)*
 Four article angles generated from your dump alone — the research is held back as a challenger, not an input. You pick the center: "This article is really about ___." It's a lens, not a topic; once approved it's locked and constrains everything in Stage 4.
@@ -117,7 +117,7 @@ Writing is the core, but a voice only compounds if it reaches people. Timbre ext
 
 - [Claude Code](https://claude.ai/code) CLI
 - Node.js (for SEO research scripts)
-- SEMrush API key (optional — required for `/seo-research`)
+- SEMrush is disabled. `/seo-research` uses web research and primary sources; keyword metrics are optional and must have a cited source.
 
 ---
 

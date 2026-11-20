@@ -71,7 +71,7 @@ AEO targets **zero-click rich results** in both traditional search and AI-powere
 PAA questions are selected by Google based on semantic relatedness to the primary query. Owning multiple PAA entries significantly increases SERP real estate.
 
 **Optimization requirements:**
-- [ ] Identify the top 5-8 PAA questions for your primary keyword (check SERPs manually or via Semrush)
+- [ ] Identify the top 5-8 PAA questions for your primary keyword (inspect live SERPs; SEMrush is disabled for Timbre)
 - [ ] Each PAA question should have its own H2 or H3 phrased **exactly as the question** users ask
 - [ ] Directly below each question H-tag: a 30-50 word direct answer paragraph
 - [ ] Avoid filler phrases ("Great question!", "In this article we will...") — Google penalizes these for PAA

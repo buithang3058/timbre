@@ -83,11 +83,11 @@ Do not proceed until all fields pass.
 
 ## Stage 2 — Research
 
-Goal: real evidence for the human's perception dump. Pattern miner only — not author.
+Goal: discover reader needs and relevant context, and verify claims both within and beyond the author's dump. Use the article request, target reader and project context; the dump supplies the author's material and perspective, not the boundary of research. Research informs and challenges the author's direction without deciding or changing the center.
 
-`/seo-research` runs automatically after Stage 1. When it returns its `[RESEARCH OUTPUT]` block, save the full output to `$DRAFTS_ROOT/[slug]/sources.md`. Do not ask the user anything here; go straight to Stage 3, where the research is presented as a challenger to the center options. That is the author's one decision point for research.
+`/seo-research` runs automatically after Stage 1 with the resolved project context and content policy when configured. Follow that skill for search discovery (including Google Suggest), source selection, claim verification and coverage; do not duplicate its rules here. When it returns its `[RESEARCH OUTPUT]` block, save the full output to `$DRAFTS_ROOT/[slug]/sources.md`, including findings outside the dump, why they matter, and evidence limitations. Do not filter those findings out merely because they go beyond the dump. Do not ask the user anything here; go straight to Stage 3, where the research is presented as a challenger to the center options. That is the author's one decision point for research.
 
-**AI-only fallback — last resort only.** Run it ONLY if `/seo-research` fails completely (no keyword data, no claims verified, no coverage map). Never as a default, never to supplement partial data. Semrush returning `ERROR 50 :: NOTHING FOUND` is not a failure — research continues with claim verification and the coverage map, and the output carries `no data` / confidence `NONE` where Semrush was empty. A Semrush API error (any other `ERROR <n>`) is a failure to fix (key, units, rate limit), not a reason to fall back to AI-only. Output must begin with:
+**AI-only fallback — last resort only.** Run it ONLY if `/seo-research` fails completely (no usable search/source discoveries, no claims verified, no evidence-backed coverage map). Never as a default, never to supplement partial data. Missing keyword volume or unavailable Google Suggest is not a research failure: continue with available web/reference sources, claim-appropriate verification under project policy, and the coverage map, marking unavailable data honestly. Output must begin with:
 
 > "[Context-only inference from training data — verify before publishing. Do not treat as retrieved fact, especially for YMYL niche (Example DeFi claims, statistics, or specific case studies.)]"
 
@@ -145,7 +145,7 @@ Then ask:
 - If the file exists (including re-centering), update only `center` and `stage: center-locked`; preserve the body and all other frontmatter. Existing prose is pending revision against the new center, not an approved draft.
 - Read back the frontmatter to confirm it saved correctly, then say: "Center locked and saved: '[sentence]'." Do not claim it is saved if the write failed.
 
-The saved center is the constraint for Stage 4 — the draft serves this center, not the surface topic. Change it only when the author approves a new center.
+The approved center governs the article's central argument and emphasis. It does not by itself justify omitting context necessary for the target reader to understand the article's subject or evaluate its argument within the agreed scope. Include that context at proportionate depth; topical relevance alone is not sufficient. Change the approved center only with the author's approval.
 
 ---
 
@@ -155,7 +155,7 @@ Use three passes within the existing writer workflow: prepare, write, then check
 
 ### 4.1 Prepare → Write
 
-**Prepare.** Use the locked center, target reader, `dump.md`, `sources.md` and configured voice resources. In the existing coverage map, arrange essential reader questions into H2/H3 sections and note the answer each section must deliver. Explain unfamiliar foundations before relying on them. Supporting topics may use a brief answer and link; essential answers must appear in the article. Candidates are advisory, not quotas. If essential coverage conflicts with the center, ask the author to decide the scope.
+**Prepare.** Use the locked center, target reader, `dump.md`, `sources.md` and configured voice resources. In the existing coverage map, arrange essential reader questions into H2/H3 sections and note the answer each section must deliver. Explain unfamiliar foundations before relying on them. Supporting topics may use a brief answer and link; essential answers must appear in the article. Candidates are advisory, not quotas. Do not treat information as conflicting with the center merely because it provides background rather than advancing the argument. Use the article request, target reader and research to determine whether that context is necessary, and include it at proportionate depth. Ask the author when addressing a material finding would require changing the approved argument or explicitly agreed scope.
 
 For a rewrite, compare with the selected original and preserve useful answers, conditions and author edits; omit repetition or obsolete facts with a reason. Smoother narration alone is not a reason to cut information. Keep headings useful for scanning.
 
